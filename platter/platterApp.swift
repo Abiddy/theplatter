@@ -1,32 +1,14 @@
-//
-//  platterApp.swift
-//  platter
-//
-//  Created by Nouman Abidi on 6/11/26.
-//
-
 import SwiftUI
-import SwiftData
 
 @main
 struct platterApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    @State private var appState = AppState()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabView()
+                .environment(appState)
+                .tint(PlatterColors.brandOrange)
         }
-        .modelContainer(sharedModelContainer)
     }
 }
