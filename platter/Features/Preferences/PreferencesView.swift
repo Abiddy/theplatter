@@ -38,40 +38,14 @@ struct PreferencesView: View {
                 PlatterSectionCard(title: "Optimize For") {
                     optimizeContent(session: session)
                 }
-
-                PlatterPrimaryButton(
-                    title: "Get Recommendations",
-                    icon: "sparkles",
-                    isLoading: session.isLoading
-                ) {
-                    Task {
-                        await session.generateCombos()
-                        if !session.combos.isEmpty {
-                            onContinue()
-                        } else if session.errorMessage != nil {
-                            showError = true
-                        } else {
-                            session.errorMessage = "Couldn't reach the server. Make sure the backend is running on your Mac."
-                            showError = true
-                        }
-                    }
-                }
-                .padding(.top, 4)
-
-                if let message = session.errorMessage {
-                    Text(message)
-                        .font(PlatterFont.body(13))
-                        .foregroundStyle(.red)
-                        .padding(12)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.red.opacity(0.08))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                }
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 16)
         }
         .background(PlatterColors.background)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            stickyFooter(session: session)
+        }
         .toolbar(.hidden, for: .navigationBar)
         .onChange(of: session.constraints.dietaryRules) { _, rules in
             if rules.contains(.vegetarian), session.constraints.vegetarianCount == 0 {
@@ -86,23 +60,58 @@ struct PreferencesView: View {
     }
 
     private var header: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .center, spacing: 12) {
             FlowBackButton {
                 dismiss()
             }
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Your Preferences")
-                    .font(PlatterFont.title(28))
-                    .foregroundStyle(PlatterColors.textPrimary)
-                Text("Platter AI will optimize around these.")
-                    .font(PlatterFont.body(14))
-                    .foregroundStyle(PlatterColors.textSecondary)
-            }
+            Text("Preferences")
+                .font(PlatterFont.sectionLabel(12))
+                .foregroundStyle(PlatterColors.textPrimary)
 
             Spacer(minLength: 0)
         }
         .padding(.top, 4)
+    }
+
+    private func stickyFooter(session: ScanSessionStore) -> some View {
+        VStack(spacing: 10) {
+            if let message = session.errorMessage {
+                Text(message)
+                    .font(PlatterFont.body(13))
+                    .foregroundStyle(.red)
+                    .padding(12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.red.opacity(0.08))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+
+            PlatterPrimaryButton(
+                title: "Get Recommendations",
+                icon: "sparkles",
+                isLoading: session.isLoading
+            ) {
+                Task {
+                    await session.generateCombos()
+                    if !session.combos.isEmpty {
+                        onContinue()
+                    } else if session.errorMessage != nil {
+                        showError = true
+                    } else {
+                        session.errorMessage = "Couldn't reach the server. Check your connection and try again."
+                        showError = true
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+        .background {
+            PlatterColors.background
+                .shadow(color: .black.opacity(0.06), radius: 8, y: -4)
+                .ignoresSafeArea(edges: .bottom)
+        }
     }
 
     private func dietaryContent(session: ScanSessionStore) -> some View {

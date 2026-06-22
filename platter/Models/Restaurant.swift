@@ -32,6 +32,7 @@ enum CuisineFilter: String, CaseIterable, Identifiable {
     case italian = "Italian"
     case japanese = "Japanese"
     case mexican = "Mexican"
+    case american = "American"
     case burgers = "Burgers"
 
     var id: String { rawValue }

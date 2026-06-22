@@ -104,4 +104,5 @@ struct PlatterTabBar: View {
 #Preview {
     MainTabView()
         .environment(AppState())
+        .environment(DiscoverRecommendationStore())
 }

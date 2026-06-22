@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct SavedView: View {
-    @State private var savedCombos: [SavedCombo] = SavedComboStore.load()
+    @Environment(AppState.self) private var appState
+    @Environment(DiscoverRecommendationStore.self) private var discoverStore
 
     var body: some View {
         ScrollView {
@@ -11,25 +12,21 @@ struct SavedView: View {
                     .foregroundStyle(PlatterColors.textPrimary)
                     .padding(.top, 8)
 
-                if savedCombos.isEmpty {
+                Text("Orders you've hearted")
+                    .font(PlatterFont.body(14))
+                    .foregroundStyle(PlatterColors.textSecondary)
+
+                if discoverStore.savedRecommendations.isEmpty {
                     emptyState
                 } else {
-                    ForEach(savedCombos) { saved in
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(saved.restaurantName)
-                                .font(PlatterFont.headline(16))
-                                .foregroundStyle(PlatterColors.textPrimary)
-                            Text(saved.combo.title)
-                                .font(PlatterFont.body(14))
-                                .foregroundStyle(PlatterColors.textSecondary)
-                            Text(saved.combo.totalFormatted)
-                                .font(PlatterFont.headline(17))
-                                .foregroundStyle(PlatterColors.brandOrange)
-                        }
-                        .padding(16)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(PlatterColors.cardWhite)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                    ForEach(discoverStore.savedRecommendations) { rec in
+                        RecommendationCard(
+                            recommendation: rec,
+                            heartCount: discoverStore.heartCount(for: rec),
+                            isHearted: true,
+                            onHeart: { discoverStore.toggleHeart(for: rec) },
+                            onOrder: { appState.openScanFlow(restaurantName: rec.restaurantName) }
+                        )
                     }
                 }
             }
@@ -44,10 +41,10 @@ struct SavedView: View {
             Image(systemName: "heart")
                 .font(.system(size: 40))
                 .foregroundStyle(PlatterColors.textSecondary.opacity(0.4))
-            Text("No saved combos yet")
+            Text("No saved orders yet")
                 .font(PlatterFont.headline(16))
                 .foregroundStyle(PlatterColors.textSecondary)
-            Text("Save a combo from your results to revisit later.")
+            Text("Heart a recommendation on Discover to save it here.")
                 .font(PlatterFont.body(14))
                 .foregroundStyle(PlatterColors.textSecondary.opacity(0.7))
                 .multilineTextAlignment(.center)
@@ -59,6 +56,7 @@ struct SavedView: View {
 
 struct SavedCombo: Identifiable, Codable {
     var id: UUID
+    var recommendationID: UUID?
     var restaurantName: String
     var combo: Combo
     var savedAt: Date
@@ -75,10 +73,40 @@ enum SavedComboStore {
         return combos
     }
 
-    static func save(_ combo: Combo, restaurantName: String) {
+    static func save(_ combo: Combo, restaurantName: String, recommendationID: UUID? = nil) {
         var existing = load()
-        existing.insert(SavedCombo(id: UUID(), restaurantName: restaurantName, combo: combo, savedAt: Date()), at: 0)
-        if let data = try? JSONEncoder().encode(existing) {
+        if let recommendationID,
+           let index = existing.firstIndex(where: { $0.recommendationID == recommendationID }) {
+            existing[index] = SavedCombo(
+                id: existing[index].id,
+                recommendationID: recommendationID,
+                restaurantName: restaurantName,
+                combo: combo,
+                savedAt: Date()
+            )
+        } else {
+            existing.insert(
+                SavedCombo(
+                    id: UUID(),
+                    recommendationID: recommendationID,
+                    restaurantName: restaurantName,
+                    combo: combo,
+                    savedAt: Date()
+                ),
+                at: 0
+            )
+        }
+        persist(existing)
+    }
+
+    static func remove(recommendationID: UUID) {
+        var existing = load()
+        existing.removeAll { $0.recommendationID == recommendationID }
+        persist(existing)
+    }
+
+    private static func persist(_ combos: [SavedCombo]) {
+        if let data = try? JSONEncoder().encode(combos) {
             UserDefaults.standard.set(data, forKey: key)
         }
     }
@@ -86,4 +114,6 @@ enum SavedComboStore {
 
 #Preview {
     SavedView()
+        .environment(AppState())
+        .environment(DiscoverRecommendationStore())
 }

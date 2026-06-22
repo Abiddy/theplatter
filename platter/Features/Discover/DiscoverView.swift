@@ -2,25 +2,31 @@ import SwiftUI
 
 struct DiscoverView: View {
     @Environment(AppState.self) private var appState
+    @Environment(DiscoverRecommendationStore.self) private var discoverStore
+
     @State private var searchText = ""
     @State private var selectedCuisine: CuisineFilter = .all
+    @State private var selectedSort: DiscoverSort = .trending
 
-    private var filteredRestaurants: [Restaurant] {
-        MockDataService.restaurants.filter { restaurant in
+    private var filteredRecommendations: [DiscoverRecommendation] {
+        discoverStore.recommendations.filter { rec in
             let matchesSearch = searchText.isEmpty
-                || restaurant.name.localizedCaseInsensitiveContains(searchText)
-                || restaurant.cuisine.localizedCaseInsensitiveContains(searchText)
-            let matchesCuisine = selectedCuisine == .all || restaurant.cuisine == selectedCuisine.rawValue
+                || rec.restaurantName.localizedCaseInsensitiveContains(searchText)
+                || rec.cuisine.localizedCaseInsensitiveContains(searchText)
+                || rec.combo.title.localizedCaseInsensitiveContains(searchText)
+                || rec.contextTags.contains { $0.localizedCaseInsensitiveContains(searchText) }
+                || rec.combo.lineItems.contains { $0.name.localizedCaseInsensitiveContains(searchText) }
+            let matchesCuisine = selectedCuisine == .all || rec.cuisine == selectedCuisine.rawValue
             return matchesSearch && matchesCuisine
         }
     }
 
-    private var trending: [Restaurant] {
-        filteredRestaurants.filter { $0.section == .trending }
+    private var displayedRecommendations: [DiscoverRecommendation] {
+        discoverStore.sorted(selectedSort, filtered: filteredRecommendations)
     }
 
-    private var nearby: [Restaurant] {
-        filteredRestaurants.filter { $0.section == .nearby }
+    private var trendingTop: [DiscoverRecommendation] {
+        discoverStore.sorted(.trending, filtered: filteredRecommendations).prefix(3).map { $0 }
     }
 
     private var greeting: String {
@@ -37,16 +43,14 @@ struct DiscoverView: View {
             VStack(alignment: .leading, spacing: 20) {
                 header
                 searchBar
+                sortPills
                 cuisinePills
 
-                if !trending.isEmpty {
-                    restaurantSection(title: "Trending Near You", restaurants: trending)
+                if !trendingTop.isEmpty, selectedSort == .trending, searchText.isEmpty, selectedCuisine == .all {
+                    trendingHighlight
                 }
 
-                if !nearby.isEmpty {
-                    restaurantSection(title: "More Nearby", restaurants: nearby)
-                }
-
+                recommendationFeed
                 aiBanner
             }
             .padding(.horizontal, 20)
@@ -64,6 +68,9 @@ struct DiscoverView: View {
                 Text("Discover")
                     .font(PlatterFont.title(28))
                     .foregroundStyle(PlatterColors.textPrimary)
+                Text("Orders people actually get")
+                    .font(PlatterFont.caption(13))
+                    .foregroundStyle(PlatterColors.textSecondary)
             }
 
             Spacer()
@@ -88,7 +95,7 @@ struct DiscoverView: View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(PlatterColors.textSecondary)
-            TextField("Search restaurants or cuisines...", text: $searchText)
+            TextField("Search orders, dishes, or cuisines...", text: $searchText)
                 .font(PlatterFont.body(15))
             Spacer(minLength: 0)
             Button {} label: {
@@ -110,6 +117,37 @@ struct DiscoverView: View {
         .clipShape(Capsule())
     }
 
+    private var sortPills: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(DiscoverSort.allCases) { sort in
+                    Button {
+                        selectedSort = sort
+                    } label: {
+                        HStack(spacing: 4) {
+                            if sort == .trending {
+                                Image(systemName: "flame.fill")
+                                    .font(.system(size: 11))
+                            }
+                            Text(sort.rawValue)
+                                .font(PlatterFont.caption(13))
+                        }
+                        .foregroundStyle(selectedSort == sort ? .white : PlatterColors.textPrimary)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(selectedSort == sort ? PlatterColors.brandOrange : PlatterColors.cardWhite)
+                        .overlay {
+                            Capsule()
+                                .stroke(PlatterColors.chipBorder, lineWidth: selectedSort == sort ? 0 : 1)
+                        }
+                        .clipShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
     private var cuisinePills: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
@@ -122,7 +160,7 @@ struct DiscoverView: View {
                             .foregroundStyle(selectedCuisine == cuisine ? .white : PlatterColors.textPrimary)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
-                            .background(selectedCuisine == cuisine ? PlatterColors.brandOrange : PlatterColors.cardWhite)
+                            .background(selectedCuisine == cuisine ? PlatterColors.textPrimary : PlatterColors.cardWhite)
                             .overlay {
                                 Capsule()
                                     .stroke(PlatterColors.chipBorder, lineWidth: selectedCuisine == cuisine ? 0 : 1)
@@ -135,24 +173,104 @@ struct DiscoverView: View {
         }
     }
 
-    private func restaurantSection(title: String, restaurants: [Restaurant]) -> some View {
-        VStack(alignment: .leading, spacing: 14) {
+    private var trendingHighlight: some View {
+        VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text(title)
-                    .font(PlatterFont.headline(18))
-                    .foregroundStyle(PlatterColors.textPrimary)
-                Spacer()
-                Text("See all")
-                    .font(PlatterFont.caption(13))
+                Image(systemName: "flame.fill")
                     .foregroundStyle(PlatterColors.brandOrange)
+                Text("Popular near you")
+                    .font(PlatterFont.headline(16))
+                    .foregroundStyle(PlatterColors.textPrimary)
             }
 
-            ForEach(restaurants) { restaurant in
-                RestaurantCard(restaurant: restaurant) {
-                    appState.openScanFlow(restaurantName: restaurant.name)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(trendingTop) { rec in
+                        trendingMiniCard(rec)
+                    }
                 }
             }
         }
+    }
+
+    private func trendingMiniCard(_ rec: DiscoverRecommendation) -> some View {
+        let hearts = discoverStore.heartCount(for: rec)
+        return VStack(alignment: .leading, spacing: 8) {
+            Text(rec.combo.title)
+                .font(PlatterFont.headline(14))
+                .foregroundStyle(PlatterColors.textPrimary)
+                .lineLimit(2)
+            Text(rec.restaurantName)
+                .font(PlatterFont.caption(12))
+                .foregroundStyle(PlatterColors.textSecondary)
+            HStack {
+                Label("\(hearts)", systemImage: "heart.fill")
+                    .font(PlatterFont.caption(11))
+                    .foregroundStyle(PlatterColors.brandOrange)
+                Spacer()
+                Text(rec.combo.totalFormatted)
+                    .font(PlatterFont.caption(12))
+                    .fontWeight(.semibold)
+                    .foregroundStyle(PlatterColors.textPrimary)
+            }
+        }
+        .padding(14)
+        .frame(width: 180, alignment: .leading)
+        .background(PlatterColors.cardWhite)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(PlatterColors.chipBorder, lineWidth: 1)
+        }
+    }
+
+    private var recommendationFeed: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text(feedTitle)
+                    .font(PlatterFont.headline(18))
+                    .foregroundStyle(PlatterColors.textPrimary)
+                Spacer()
+                Text("\(displayedRecommendations.count) orders")
+                    .font(PlatterFont.caption(13))
+                    .foregroundStyle(PlatterColors.textSecondary)
+            }
+
+            if displayedRecommendations.isEmpty {
+                emptyState
+            } else {
+                ForEach(displayedRecommendations) { rec in
+                    RecommendationCard(
+                        recommendation: rec,
+                        heartCount: discoverStore.heartCount(for: rec),
+                        isHearted: discoverStore.isHearted(rec.id),
+                        onHeart: { discoverStore.toggleHeart(for: rec) },
+                        onOrder: { appState.openScanFlow(restaurantName: rec.restaurantName) }
+                    )
+                }
+            }
+        }
+    }
+
+    private var feedTitle: String {
+        switch selectedSort {
+        case .trending: "Trending Orders"
+        case .nearby: "Nearby Orders"
+        case .newest: "New Picks"
+        }
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "tray")
+                .font(.system(size: 36))
+                .foregroundStyle(PlatterColors.textSecondary.opacity(0.4))
+            Text("No orders match your filters")
+                .font(PlatterFont.headline(15))
+                .foregroundStyle(PlatterColors.textSecondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 40)
     }
 
     private var aiBanner: some View {
@@ -170,10 +288,10 @@ struct DiscoverView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Let Platter AI order for you")
+                    Text("Build your own order")
                         .font(PlatterFont.headline(15))
                         .foregroundStyle(.white)
-                    Text("Set budget, diet & party size — done.")
+                    Text("Scan a menu · set budget & diet · done.")
                         .font(PlatterFont.body(13))
                         .foregroundStyle(.white.opacity(0.85))
                 }
@@ -195,4 +313,5 @@ struct DiscoverView: View {
 #Preview {
     DiscoverView()
         .environment(AppState())
+        .environment(DiscoverRecommendationStore())
 }
