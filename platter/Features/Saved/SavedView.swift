@@ -1,39 +1,44 @@
 import SwiftUI
 
 struct SavedView: View {
-    @Environment(AppState.self) private var appState
     @Environment(DiscoverRecommendationStore.self) private var discoverStore
+    @State private var selectedRestaurant: RestaurantRoute?
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("Saved")
-                    .font(PlatterFont.title(28))
-                    .foregroundStyle(PlatterColors.textPrimary)
-                    .padding(.top, 8)
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("Saved")
+                        .font(PlatterFont.title(28))
+                        .foregroundStyle(PlatterColors.textPrimary)
+                        .padding(.top, 8)
 
-                Text("Orders you've hearted")
-                    .font(PlatterFont.body(14))
-                    .foregroundStyle(PlatterColors.textSecondary)
+                    Text("Orders you've hearted")
+                        .font(PlatterFont.body(14))
+                        .foregroundStyle(PlatterColors.textSecondary)
 
-                if discoverStore.savedRecommendations.isEmpty {
-                    emptyState
-                } else {
-                    ForEach(discoverStore.savedRecommendations) { rec in
-                        RecommendationCard(
-                            recommendation: rec,
-                            heartCount: discoverStore.heartCount(for: rec),
-                            isHearted: true,
-                            onHeart: { discoverStore.toggleHeart(for: rec) },
-                            onOrder: { appState.openScanFlow(restaurantName: rec.restaurantName) }
-                        )
+                    if discoverStore.savedRecommendations.isEmpty {
+                        emptyState
+                    } else {
+                        ForEach(discoverStore.savedRecommendations) { rec in
+                            RecommendationCard(
+                                recommendation: rec,
+                                heartCount: discoverStore.heartCount(for: rec),
+                                isHearted: true,
+                                onHeart: { discoverStore.toggleHeart(for: rec) },
+                                onFullMenu: { selectedRestaurant = RestaurantRoute(name: rec.restaurantName) }
+                            )
+                        }
                     }
                 }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 16)
             }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 16)
+            .background(PlatterColors.background)
+            .navigationDestination(item: $selectedRestaurant) { route in
+                RestaurantDetailView(restaurantName: route.name)
+            }
         }
-        .background(PlatterColors.background)
     }
 
     private var emptyState: some View {
@@ -114,6 +119,5 @@ enum SavedComboStore {
 
 #Preview {
     SavedView()
-        .environment(AppState())
         .environment(DiscoverRecommendationStore())
 }

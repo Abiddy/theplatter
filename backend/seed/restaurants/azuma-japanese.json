@@ -1,0 +1,42 @@
+{
+  "restaurant_name": "Azuma Japanese Restaurant",
+  "cuisine": "Japanese",
+  "distance_miles": 0.8,
+  "is_verified": true,
+  "image_seed": 3,
+  "sections": [
+    {
+      "name": "Combination Dinners",
+      "items": [
+        { "name": "Teriyaki Chicken", "price_cents": 1495, "course": "main", "description": "Grilled chicken with teriyaki glaze and rice" },
+        { "name": "Teriyaki Beef", "price_cents": 1795, "course": "main" },
+        { "name": "Tempura Dinner", "price_cents": 1695, "course": "main", "contains_fish": true },
+        { "name": "Katsudon Bowl", "price_cents": 1395, "course": "main", "contains_pork": true },
+        { "name": "Vegetable Teriyaki Plate", "price_cents": 1295, "course": "main", "is_vegetarian": true }
+      ]
+    },
+    {
+      "name": "Sushi & Sashimi",
+      "items": [
+        { "name": "Sashimi Plate", "price_cents": 1895, "course": "main", "contains_fish": true },
+        { "name": "California Roll", "price_cents": 795, "course": "main", "is_shareable": true, "serves_max": 2 }
+      ]
+    },
+    {
+      "name": "Starters & Sides",
+      "items": [
+        { "name": "Gyoza", "price_cents": 695, "course": "appetizer", "is_shareable": true, "serves_max": 2, "contains_pork": true },
+        { "name": "Edamame", "price_cents": 595, "course": "appetizer", "is_vegetarian": true, "is_vegan": true },
+        { "name": "Miso Soup", "price_cents": 295, "course": "side", "is_vegetarian": true },
+        { "name": "Steamed Rice", "price_cents": 250, "course": "side", "is_vegetarian": true, "is_vegan": true }
+      ]
+    },
+    {
+      "name": "Drinks",
+      "items": [
+        { "name": "Hot Green Tea", "price_cents": 200, "course": "drink", "is_vegetarian": true, "is_vegan": true },
+        { "name": "Ramune Soda", "price_cents": 350, "course": "drink", "is_vegetarian": true }
+      ]
+    }
+  ]
+}

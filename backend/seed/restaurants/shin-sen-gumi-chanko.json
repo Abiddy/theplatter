@@ -1,0 +1,42 @@
+{
+  "restaurant_name": "Shin-Sen-Gumi Chanko",
+  "cuisine": "Japanese",
+  "distance_miles": 1.2,
+  "is_verified": true,
+  "image_seed": 1,
+  "sections": [
+    {
+      "name": "Yakitori",
+      "items": [
+        { "name": "Chicken Thigh Skewer", "price_cents": 280, "course": "appetizer" },
+        { "name": "Chicken Meatball (Tsukune)", "price_cents": 300, "course": "appetizer" },
+        { "name": "Beef Tongue Skewer", "price_cents": 380, "course": "appetizer" },
+        { "name": "Shishito Pepper Skewer", "price_cents": 260, "course": "appetizer", "is_vegetarian": true, "is_vegan": true }
+      ]
+    },
+    {
+      "name": "Ramen",
+      "items": [
+        { "name": "Shio Ramen", "price_cents": 1280, "course": "main" },
+        { "name": "Tonkotsu Ramen", "price_cents": 1380, "course": "main", "contains_pork": true },
+        { "name": "Veggie Shoyu Ramen", "price_cents": 1180, "course": "main", "is_vegetarian": true }
+      ]
+    },
+    {
+      "name": "Chanko & Plates",
+      "items": [
+        { "name": "Braised Pork Belly", "price_cents": 980, "course": "main", "contains_pork": true },
+        { "name": "Chanko Hot Pot (for 2)", "price_cents": 2600, "course": "main", "is_shareable": true, "serves_min": 2, "serves_max": 3 },
+        { "name": "Edamame", "price_cents": 480, "course": "side", "is_vegetarian": true, "is_vegan": true }
+      ]
+    },
+    {
+      "name": "Drinks",
+      "items": [
+        { "name": "Draft Beer", "price_cents": 600, "course": "drink" },
+        { "name": "Green Tea", "price_cents": 300, "course": "drink", "is_vegetarian": true, "is_vegan": true },
+        { "name": "Ramune Soda", "price_cents": 350, "course": "drink", "is_vegetarian": true }
+      ]
+    }
+  ]
+}

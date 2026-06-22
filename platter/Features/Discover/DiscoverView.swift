@@ -7,6 +7,7 @@ struct DiscoverView: View {
     @State private var searchText = ""
     @State private var selectedCuisine: CuisineFilter = .all
     @State private var selectedSort: DiscoverSort = .trending
+    @State private var selectedRestaurant: RestaurantRoute?
 
     private var filteredRecommendations: [DiscoverRecommendation] {
         discoverStore.recommendations.filter { rec in
@@ -39,24 +40,33 @@ struct DiscoverView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                header
-                searchBar
-                sortPills
-                cuisinePills
-
-                if !trendingTop.isEmpty, selectedSort == .trending, searchText.isEmpty, selectedCuisine == .all {
-                    trendingHighlight
-                }
-
-                recommendationFeed
-                aiBanner
+        NavigationStack {
+            ScrollView {
+                discoverContent
             }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 16)
+            .background(PlatterColors.background)
+            .navigationDestination(item: $selectedRestaurant) { route in
+                RestaurantDetailView(restaurantName: route.name)
+            }
         }
-        .background(PlatterColors.background)
+    }
+
+    private var discoverContent: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            header
+            searchBar
+            sortPills
+            cuisinePills
+
+            if !trendingTop.isEmpty, selectedSort == .trending, searchText.isEmpty, selectedCuisine == .all {
+                trendingHighlight
+            }
+
+            recommendationFeed
+            aiBanner
+        }
+        .padding(.horizontal, 20)
+        .padding(.bottom, 16)
     }
 
     private var header: some View {
@@ -245,7 +255,7 @@ struct DiscoverView: View {
                         heartCount: discoverStore.heartCount(for: rec),
                         isHearted: discoverStore.isHearted(rec.id),
                         onHeart: { discoverStore.toggleHeart(for: rec) },
-                        onOrder: { appState.openScanFlow(restaurantName: rec.restaurantName) }
+                        onFullMenu: { selectedRestaurant = RestaurantRoute(name: rec.restaurantName) }
                     )
                 }
             }

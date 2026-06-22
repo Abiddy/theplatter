@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platter · Recs Portal</title>
+  <style>
+    :root {
+      --bg: #0f0f0f; --card: #1a1a1a; --line: #2a2a2a; --text: #f4f4f4;
+      --muted: #9a9a9a; --orange: #ff5722; --orange-dim: #e64a1a; --green: #34c759;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    header { padding: 20px 24px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; position: sticky; top: 0; background: var(--bg); z-index: 10; }
+    header h1 { font-size: 20px; font-weight: 800; }
+    header .pill { font-size: 11px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    .searchbar { display: flex; gap: 10px; margin-bottom: 24px; }
+    .searchbar input { flex: 1; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 15px; }
+    button { cursor: pointer; border: none; border-radius: 12px; font-weight: 600; font-size: 14px; transition: transform .08s, background .15s; }
+    button:active { transform: scale(.97); }
+    .btn-primary { background: var(--orange); color: #fff; padding: 14px 22px; }
+    .btn-primary:hover { background: var(--orange-dim); }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); padding: 8px 14px; }
+    .btn-ghost:hover { color: var(--text); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+    .card h3 { font-size: 16px; margin-bottom: 4px; }
+    .card .meta { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+    .card .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .badge { font-size: 11px; padding: 3px 9px; border-radius: 999px; font-weight: 700; }
+    .badge.draft { background: #2a2a2a; color: var(--muted); }
+    .badge.published { background: rgba(52,199,89,.15); color: var(--green); }
+    .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 28px 0 12px; }
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; z-index: 50; }
+    .modal-bg.open { display: flex; }
+    .modal { background: var(--card); border: 1px solid var(--line); border-radius: 18px; width: 100%; max-width: 640px; padding: 24px; }
+    .modal h2 { font-size: 18px; margin-bottom: 4px; }
+    .modal .sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+    textarea { width: 100%; min-height: 200px; padding: 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-size: 14px; font-family: ui-monospace, monospace; resize: vertical; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+    .preview { margin-top: 20px; border-top: 1px solid var(--line); padding-top: 16px; }
+    .menu-section { margin-bottom: 14px; }
+    .menu-section h4 { font-size: 12px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .menu-item { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+    .rec-chip { display: inline-block; background: rgba(255,87,34,.12); color: var(--orange); font-size: 12px; padding: 5px 11px; border-radius: 999px; margin: 0 6px 6px 0; }
+    .empty { color: var(--muted); font-size: 14px; padding: 30px 0; text-align: center; }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .warn { background: rgba(255,200,0,.1); color: #ffcf4d; font-size: 12px; padding: 8px 12px; border-radius: 8px; margin-top: 10px; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid var(--line); padding: 12px 20px; border-radius: 12px; font-size: 14px; display: none; z-index: 100; }
+    .toast.show { display: block; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🍽️ Platter Recs Portal</h1>
+    <span class="pill" id="status-pill">checking…</span>
+  </header>
+
+  <div class="wrap">
+    <div class="searchbar">
+      <input id="search-input" placeholder="Search a location or restaurant (e.g. Gardena)" />
+      <button class="btn-primary" onclick="runSearch()">Search</button>
+    </div>
+
+    <div id="search-results"></div>
+
+    <div class="section-title">Saved restaurants</div>
+    <div id="saved-list"><div class="empty">Loading…</div></div>
+  </div>
+
+  <!-- Add Menu modal -->
+  <div class="modal-bg" id="modal">
+    <div class="modal">
+      <h2 id="modal-title">Add menu</h2>
+      <div class="sub" id="modal-sub"></div>
+      <textarea id="menu-text" placeholder="Paste the rough menu here…&#10;&#10;Margherita Pizza 18&#10;Spaghetti Carbonara 17&#10;Tiramisu 8&#10;House Wine 10"></textarea>
+      <div class="modal-actions">
+        <button class="btn-primary" id="gen-btn" onclick="generate()">Generate Menu &amp; Recs</button>
+        <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+      </div>
+      <div class="warn" id="modal-warn" style="display:none"></div>
+      <div class="preview" id="preview" style="display:none">
+        <div id="preview-menu"></div>
+        <div class="section-title" style="margin-top:18px">Recommendation cards</div>
+        <div id="preview-recs"></div>
+        <div class="modal-actions">
+          <button class="btn-primary" id="save-btn" onclick="save()">Save to Discover</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let current = null;       // restaurant being edited
+    let lastPreview = null;   // { menu, recommendations }
+
+    async function checkStatus() {
+      try {
+        const r = await fetch('/health');
+        const j = await r.json();
+        const bits = [];
+        bits.push(j.openai_configured ? 'OpenAI ✓' : 'OpenAI ✗');
+        bits.push(j.places_configured ? 'Places ✓' : 'Places ✗');
+        document.getElementById('status-pill').textContent = bits.join(' · ');
+      } catch { document.getElementById('status-pill').textContent = 'offline'; }
+    }
+
+    function fmtPrice(c) { return '$' + (c / 100).toFixed(2); }
+
+    async function runSearch() {
+      const q = document.getElementById('search-input').value.trim();
+      if (!q) return;
+      const box = document.getElementById('search-results');
+      box.innerHTML = '<div class="empty"><span class="spinner"></span> Searching…</div>';
+      try {
+        const r = await fetch('/admin/places/search?q=' + encodeURIComponent(q));
+        if (!r.ok) { box.innerHTML = '<div class="empty">' + (await r.json()).detail + '</div>'; return; }
+        const places = await r.json();
+        if (!places.length) { box.innerHTML = '<div class="empty">No results.</div>'; return; }
+        box.innerHTML = '<div class="section-title">Results</div><div class="grid">' +
+          places.map((p, i) => cardHTML(p, i)).join('') + '</div>';
+        window._places = places;
+      } catch (e) { box.innerHTML = '<div class="empty">Search failed: ' + e + '</div>'; }
+    }
+
+    function cardHTML(p, i) {
+      return `<div class="card">
+        <h3>${p.name}</h3>
+        <div class="meta">${p.cuisine} · ${p.distance_miles} mi · ${p.price_tier} · ⭐ ${p.rating || '—'}</div>
+        <div class="row">
+          <button class="btn-primary" style="padding:10px 16px" onclick="openModal(${i})">📖 Add menu</button>
+        </div>
+      </div>`;
+    }
+
+    function openModal(i) {
+      current = { ...window._places[i], image_seed: i % 4, is_verified: true };
+      document.getElementById('modal-title').textContent = current.name;
+      document.getElementById('modal-sub').textContent = current.cuisine + ' · ' + current.distance_miles + ' mi';
+      document.getElementById('menu-text').value = '';
+      document.getElementById('preview').style.display = 'none';
+      document.getElementById('modal-warn').style.display = 'none';
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+      current = null; lastPreview = null;
+    }
+
+    async function generate() {
+      const text = document.getElementById('menu-text').value.trim();
+      if (!text) { return; }
+      const btn = document.getElementById('gen-btn');
+      btn.innerHTML = '<span class="spinner"></span> Generating…'; btn.disabled = true;
+      try {
+        const r = await fetch('/admin/generate', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: current.name, cuisine: current.cuisine,
+            distance_miles: current.distance_miles, image_seed: current.image_seed,
+            is_verified: true, raw_menu_text: text,
+          }),
+        });
+        if (!r.ok) { showWarn((await r.json()).detail); return; }
+        lastPreview = await r.json();
+        renderPreview(lastPreview);
+      } catch (e) { showWarn('Generate failed: ' + e); }
+      finally { btn.innerHTML = 'Generate Menu &amp; Recs'; btn.disabled = false; }
+    }
+
+    function showWarn(msg) {
+      const w = document.getElementById('modal-warn');
+      w.textContent = msg; w.style.display = 'block';
+    }
+
+    function renderPreview(data) {
+      const menuHTML = data.menu.sections.map(s => `
+        <div class="menu-section">
+          <h4>${s.name}</h4>
+          ${s.items.map(it => `<div class="menu-item"><span>${it.name}</span><span>${fmtPrice(it.price_cents)}</span></div>`).join('')}
+        </div>`).join('');
+      document.getElementById('preview-menu').innerHTML =
+        '<div class="section-title" style="margin-top:0">Parsed menu (' +
+        data.menu.sections.reduce((n, s) => n + s.items.length, 0) + ' items)</div>' + menuHTML;
+      document.getElementById('preview-recs').innerHTML =
+        data.recommendations.map(c => `<span class="rec-chip">${c.combo.title} · ${fmtPrice(c.combo.total_cents)}</span>`).join('')
+        || '<div class="empty">No cards generated.</div>';
+      if (data.warnings && data.warnings.length) showWarn('Parser notes: ' + data.warnings.join('; '));
+      document.getElementById('preview').style.display = 'block';
+    }
+
+    async function save() {
+      if (!lastPreview) return;
+      const btn = document.getElementById('save-btn');
+      btn.innerHTML = '<span class="spinner"></span> Saving…'; btn.disabled = true;
+      try {
+        const r = await fetch('/admin/restaurants', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            place_id: current.place_id, name: current.name, cuisine: current.cuisine,
+            address: current.address, lat: current.lat, lng: current.lng,
+            rating: current.rating, review_count: current.review_count,
+            price_tier: current.price_tier, distance_miles: current.distance_miles,
+            image_seed: current.image_seed, is_verified: true,
+            raw_menu_text: document.getElementById('menu-text').value,
+            menu: lastPreview.menu, recommendations: lastPreview.recommendations,
+          }),
+        });
+        if (!r.ok) { showWarn((await r.json()).detail); return; }
+        const j = await r.json();
+        toast(`Saved ${current.name} · ${j.cards} cards`);
+        closeModal(); loadSaved();
+      } catch (e) { showWarn('Save failed: ' + e); }
+      finally { btn.innerHTML = 'Save to Discover'; btn.disabled = false; }
+    }
+
+    async function loadSaved() {
+      const box = document.getElementById('saved-list');
+      try {
+        const r = await fetch('/admin/restaurants');
+        const rows = await r.json();
+        if (!rows.length) { box.innerHTML = '<div class="empty">No restaurants saved yet.</div>'; return; }
+        box.innerHTML = '<div class="grid">' + rows.map(row => `
+          <div class="card">
+            <div class="row"><h3>${row.name}</h3><span class="badge ${row.status}">${row.status}</span></div>
+            <div class="meta">${row.cuisine} · ${row.distance_miles} mi</div>
+            <div class="meta">${row.menu_item_count} items · ${row.card_count} cards</div>
+            <div class="row" style="margin-top:8px">
+              <button class="btn-ghost" onclick="del('${row.id}','${row.name.replace(/'/g, "")}')">Delete</button>
+            </div>
+          </div>`).join('') + '</div>';
+      } catch { box.innerHTML = '<div class="empty">Could not load.</div>'; }
+    }
+
+    async function del(id, name) {
+      if (!confirm('Delete ' + name + '?')) return;
+      await fetch('/admin/restaurants/' + id, { method: 'DELETE' });
+      toast('Deleted ' + name); loadSaved();
+    }
+
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    document.getElementById('search-input').addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
+    checkStatus(); loadSaved();
+  </script>
+</body>
+</html>

@@ -121,9 +121,100 @@ enum MockDataService {
     }
 
     static func menu(for restaurantName: String) -> Menu {
-        var menu = osteriaBellaMenu()
-        menu.restaurantName = restaurantName
-        return menu
+        switch restaurantName {
+        case "Osteria Bella": return osteriaBellaMenu()
+        case "Sakura Ramen": return sakuraRamenMenu()
+        case "Casa Verde": return casaVerdeMenu()
+        case "Harvest & Hole": return harvestAndHoleMenu()
+        default:
+            var menu = osteriaBellaMenu()
+            menu.restaurantName = restaurantName
+            return menu
+        }
+    }
+
+    static func restaurant(named name: String) -> Restaurant? {
+        restaurants.first { $0.name == name }
+    }
+
+    static func recommendations(for restaurantName: String) -> [DiscoverRecommendation] {
+        discoverRecommendations.filter { $0.restaurantName == restaurantName }
+    }
+
+    static func sakuraRamenMenu() -> Menu {
+        Menu(
+            restaurantName: "Sakura Ramen",
+            sections: [
+                MenuSection(name: "Ramen", items: [
+                    MenuItem(name: "Tonkotsu Ramen", description: "Rich pork broth, chashu, soft egg", priceCents: 1800, course: .main),
+                    MenuItem(name: "Miso Ramen", description: "Savory miso broth, corn, butter", priceCents: 1700, course: .main),
+                    MenuItem(name: "Spicy Miso Ramen", description: "Miso broth with chili oil", priceCents: 1750, course: .main, isShareable: false),
+                    MenuItem(name: "Shoyu Ramen", description: "Clear soy-based broth", priceCents: 1650, course: .main),
+                ]),
+                MenuSection(name: "Small Plates", items: [
+                    MenuItem(name: "Pork Gyoza", priceCents: 900, course: .appetizer, isShareable: true, servesMin: 1, servesMax: 2),
+                    MenuItem(name: "Edamame", priceCents: 650, course: .appetizer, isVegetarian: true, isVegan: true),
+                    MenuItem(name: "Karaage", priceCents: 1100, course: .appetizer),
+                ]),
+                MenuSection(name: "Drinks", items: [
+                    MenuItem(name: "Green Tea", priceCents: 400, course: .drink),
+                    MenuItem(name: "Ramune Soda", priceCents: 450, course: .drink),
+                    MenuItem(name: "Sapporo Draft", priceCents: 700, course: .drink),
+                ]),
+            ],
+            scannedAt: Date(),
+            source: .verified
+        )
+    }
+
+    static func casaVerdeMenu() -> Menu {
+        Menu(
+            restaurantName: "Casa Verde",
+            sections: [
+                MenuSection(name: "Tacos", items: [
+                    MenuItem(name: "Street Tacos (3)", description: "Al pastor, onion, cilantro", priceCents: 1400, course: .main),
+                    MenuItem(name: "Fish Tacos (3)", description: "Baja-style, cabbage slaw", priceCents: 1500, course: .main, containsFish: true),
+                    MenuItem(name: "Veggie Tacos (3)", priceCents: 1300, course: .main, isVegetarian: true),
+                ]),
+                MenuSection(name: "Shareables", items: [
+                    MenuItem(name: "Guacamole & Chips", priceCents: 1200, course: .appetizer, isShareable: true, servesMin: 2, servesMax: 4, isVegetarian: true),
+                    MenuItem(name: "Queso Fundido", priceCents: 1100, course: .appetizer, isShareable: true),
+                    MenuItem(name: "Elote", priceCents: 800, course: .side, isVegetarian: true),
+                ]),
+                MenuSection(name: "Desserts & Drinks", items: [
+                    MenuItem(name: "Churros", priceCents: 800, course: .dessert, isVegetarian: true),
+                    MenuItem(name: "Horchata Pitcher", priceCents: 900, course: .drink, isShareable: true, servesMin: 2, servesMax: 4),
+                    MenuItem(name: "Margarita", priceCents: 1100, course: .drink),
+                ]),
+            ],
+            scannedAt: Date(),
+            source: .verified
+        )
+    }
+
+    static func harvestAndHoleMenu() -> Menu {
+        Menu(
+            restaurantName: "Harvest & Hole",
+            sections: [
+                MenuSection(name: "Brunch", items: [
+                    MenuItem(name: "Avocado Toast", description: "Sourdough, poached eggs, chili flakes", priceCents: 1400, course: .main, isVegetarian: true),
+                    MenuItem(name: "Eggs Benedict", description: "Hollandaise, Canadian bacon", priceCents: 1600, course: .main, containsPork: true),
+                    MenuItem(name: "Blueberry Pancakes", priceCents: 1300, course: .main, isVegetarian: true),
+                    MenuItem(name: "Harvest Bowl", description: "Quinoa, roasted veg, tahini", priceCents: 1500, course: .main, isVegetarian: true, isVegan: true),
+                ]),
+                MenuSection(name: "Sandwiches", items: [
+                    MenuItem(name: "Club Sandwich", priceCents: 1550, course: .main),
+                    MenuItem(name: "Grilled Cheese", priceCents: 1200, course: .main, isVegetarian: true),
+                ]),
+                MenuSection(name: "Coffee & Juice", items: [
+                    MenuItem(name: "Cold Brew", priceCents: 550, course: .drink),
+                    MenuItem(name: "Latte", priceCents: 500, course: .drink),
+                    MenuItem(name: "Fresh Orange Juice", priceCents: 600, course: .drink),
+                ]),
+            ],
+            scannedAt: Date(),
+            source: .verified
+        )
     }
 
     static let discoverRecommendations: [DiscoverRecommendation] = [

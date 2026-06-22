@@ -4,8 +4,10 @@ struct RecommendationCard: View {
     let recommendation: DiscoverRecommendation
     let heartCount: Int
     let isHearted: Bool
+    var showsRestaurantMeta: Bool = true
+    var showsFullMenuLink: Bool = true
     let onHeart: () -> Void
-    let onOrder: () -> Void
+    var onFullMenu: (() -> Void)? = nil
 
     private var previewItems: [ComboLineItem] {
         Array(recommendation.combo.lineItems.prefix(3))
@@ -23,12 +25,13 @@ struct RecommendationCard: View {
             }
 
             VStack(alignment: .leading, spacing: 12) {
-                restaurantRow
+                if showsRestaurantMeta {
+                    restaurantRow
+                }
                 comboHeader
                 lineItemsPreview
                 contextRow
                 footerRow
-                orderButton
             }
             .padding(16)
         }
@@ -156,33 +159,40 @@ struct RecommendationCard: View {
     }
 
     private var footerRow: some View {
-        HStack {
-            Text(recommendation.combo.totalFormatted)
-                .font(PlatterFont.headline(20))
-                .foregroundStyle(PlatterColors.brandOrange)
-            Text("total")
-                .font(PlatterFont.caption(12))
-                .foregroundStyle(PlatterColors.textSecondary)
+        HStack(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text(recommendation.combo.totalFormatted)
+                        .font(PlatterFont.headline(20))
+                        .foregroundStyle(PlatterColors.brandOrange)
+                    Text("total")
+                        .font(PlatterFont.caption(12))
+                        .foregroundStyle(PlatterColors.textSecondary)
+                }
+                Text(recommendation.perPersonFormatted)
+                    .font(PlatterFont.caption(12))
+                    .foregroundStyle(PlatterColors.textSecondary)
+            }
+
             Spacer()
-            Text(recommendation.perPersonFormatted)
-                .font(PlatterFont.caption(12))
-                .foregroundStyle(PlatterColors.textSecondary)
+
+            if showsFullMenuLink, let onFullMenu {
+                fullMenuButton(action: onFullMenu)
+            }
         }
     }
 
-    private var orderButton: some View {
-        Button(action: onOrder) {
-            HStack(spacing: 6) {
-                Image(systemName: "sparkles")
-                    .font(.system(size: 14, weight: .semibold))
-                Text("Order This")
-                    .font(PlatterFont.headline(15))
+    private func fullMenuButton(action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: "book.fill")
+                    .font(.system(size: 18, weight: .medium))
+                Text("Full menu")
+                    .font(PlatterFont.caption(11))
+                    .fontWeight(.semibold)
             }
-            .foregroundStyle(.white)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
-            .background(PlatterColors.brandOrange)
-            .clipShape(Capsule())
+            .foregroundStyle(PlatterColors.brandOrange)
+            .frame(minWidth: 64)
         }
         .buttonStyle(.plain)
     }

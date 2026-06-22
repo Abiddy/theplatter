@@ -146,6 +146,90 @@ def mock_menu(restaurant_name: str | None = None) -> ParseMenuResponse:
     return ParseMenuResponse(menu=menu, confidence=0.95, warnings=[])
 
 
+def _sections_from_payload(payload: dict) -> list[MenuSection]:
+    return [
+        MenuSection(
+            name=section["name"],
+            items=[
+                MenuItem(
+                    name=item["name"],
+                    description=item.get("description"),
+                    price_cents=item["price_cents"],
+                    course=item.get("course", MenuCourse.unknown),
+                    is_shareable=item.get("is_shareable", False),
+                    serves_min=item.get("serves_min", 1),
+                    serves_max=item.get("serves_max", 1),
+                    is_vegetarian=item.get("is_vegetarian", False),
+                    is_vegan=item.get("is_vegan", False),
+                    contains_fish=item.get("contains_fish", False),
+                    contains_nuts=item.get("contains_nuts", False),
+                    contains_pork=item.get("contains_pork", False),
+                    is_gluten_free=item.get("is_gluten_free", False),
+                )
+                for item in section.get("items", [])
+            ],
+        )
+        for section in payload.get("sections", [])
+    ]
+
+
+def parse_menu_text(
+    raw_text: str,
+    restaurant_name: str | None = None,
+) -> ParseMenuResponse:
+    """Turn roughly-pasted menu text into a structured Menu via OpenAI.
+
+    Reuses the same JSON schema as image parsing. Used by the admin portal.
+    """
+    if not settings.has_openai_key:
+        raise RuntimeError("OPENAI_API_KEY is not configured on the server.")
+
+    client = OpenAI(api_key=settings.openai_api_key)
+
+    completion = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You convert rough, pasted restaurant menu text into structured JSON. "
+                    "Group items into sensible sections (e.g. Appetizers, Mains, Pasta, Drinks, Desserts). "
+                    "Prices must be integer cents (e.g. $12.50 -> 1250). If a price is missing, estimate "
+                    "a reasonable one from the item and cuisine. Infer dietary flags conservatively from "
+                    "names/descriptions. Classify each item's course and whether it is shareable. "
+                    "Estimate serves_min/serves_max conservatively: entrees serve 1, pizzas/share plates 2-4, drinks 1. "
+                    "Add a warning for anything you had to guess."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Restaurant: {restaurant_name or 'Unknown'}\n\n"
+                    f"Rough menu text:\n{raw_text}"
+                ),
+            },
+        ],
+        response_format={
+            "type": "json_schema",
+            "json_schema": {"name": "menu_parse", "schema": MENU_SCHEMA, "strict": True},
+        },
+    )
+
+    payload = json.loads(completion.choices[0].message.content or "{}")
+    menu = Menu(
+        restaurant_name=payload.get("restaurant_name") or restaurant_name,
+        sections=_sections_from_payload(payload),
+        scanned_at=datetime.utcnow(),
+        source=MenuSource.verified,
+    )
+
+    return ParseMenuResponse(
+        menu=menu,
+        confidence=0.85,
+        warnings=payload.get("warnings", []),
+    )
+
+
 async def parse_menu_image(
     image_bytes: bytes,
     source: MenuSource,

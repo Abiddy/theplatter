@@ -1,0 +1,984 @@
+[
+  {
+    "id": "ef399ded-7cd9-5bc1-9436-cc40aceee411",
+    "restaurant_name": "Azuma Japanese Restaurant",
+    "cuisine": "Japanese",
+    "distance_miles": 0.8,
+    "image_seed": 3,
+    "is_verified": true,
+    "combo": {
+      "id": "62929e31-cf38-4f67-8547-a6a65602d2e7",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Date Night for 2",
+      "subtitle": "Shared plates for two",
+      "line_items": [
+        {
+          "id": "67d2d090-aafd-426f-a2ce-f8e8d7f433ab",
+          "menu_item_id": "96d6d110-d8a9-42ca-9937-409c1508d224",
+          "name": "Teriyaki Chicken",
+          "quantity": 1,
+          "line_total_cents": 1495
+        },
+        {
+          "id": "82a6d619-6901-42b3-a05c-57d178dbe110",
+          "menu_item_id": "59c31b3a-a2d3-4680-b954-1d1cbd6103b8",
+          "name": "Katsudon Bowl",
+          "quantity": 1,
+          "line_total_cents": 1395
+        },
+        {
+          "id": "a0addd35-dd9c-4720-8706-6e8fab242061",
+          "menu_item_id": "84000613-5574-4100-bcef-091655af0750",
+          "name": "Vegetable Teriyaki Plate",
+          "quantity": 1,
+          "line_total_cents": 1295
+        },
+        {
+          "id": "a027a704-4a05-4c8d-bccb-8aa497f0ea38",
+          "menu_item_id": "a465f026-4994-4c33-8424-efed991f70d0",
+          "name": "California Roll",
+          "quantity": 1,
+          "line_total_cents": 795
+        },
+        {
+          "id": "543d02c7-5556-4968-98a5-5da9ff96d236",
+          "menu_item_id": "b395e538-681b-45ec-9c1f-3b31081f7e66",
+          "name": "Gyoza",
+          "quantity": 1,
+          "line_total_cents": 695
+        },
+        {
+          "id": "ee4de7d1-a190-4772-adfe-36b9b0775899",
+          "menu_item_id": "e56b4100-d76a-4508-9792-8d238d03ac88",
+          "name": "Edamame",
+          "quantity": 1,
+          "line_total_cents": 595
+        },
+        {
+          "id": "9a92279b-63aa-4c10-9605-b227ff1067e6",
+          "menu_item_id": "4e5f7271-2873-462e-8bdc-a26f7ef077d4",
+          "name": "Ramune Soda",
+          "quantity": 1,
+          "line_total_cents": 350
+        },
+        {
+          "id": "5214ed6e-1dc7-4bb9-ba6c-c92a387b2f9d",
+          "menu_item_id": "04fbb5c7-6559-4577-8178-96f2edfaabaa",
+          "name": "Miso Soup",
+          "quantity": 2,
+          "line_total_cents": 590
+        }
+      ],
+      "total_cents": 7210,
+      "savings_cents": 0
+    },
+    "party_size": 2,
+    "budget_cents": 7500,
+    "context_tags": [
+      "Date Night",
+      "Romantic"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "7bb70591-1d34-57e9-8a0b-e219fd9c3ce4",
+    "restaurant_name": "Azuma Japanese Restaurant",
+    "cuisine": "Japanese",
+    "distance_miles": 0.8,
+    "image_seed": 3,
+    "is_verified": true,
+    "combo": {
+      "id": "c6c43659-9969-4b3f-a731-6069440733b7",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Family Feast for 4",
+      "subtitle": "Fill everyone up",
+      "line_items": [
+        {
+          "id": "b29a236e-37d8-4fdb-b549-ccbe4e4fc913",
+          "menu_item_id": "02895fc1-80da-482b-a6d7-c48cb755b2d9",
+          "name": "Tempura Dinner",
+          "quantity": 1,
+          "line_total_cents": 1695
+        },
+        {
+          "id": "510c3134-7338-4f4e-a3c5-05d3a8596ef9",
+          "menu_item_id": "96d6d110-d8a9-42ca-9937-409c1508d224",
+          "name": "Teriyaki Chicken",
+          "quantity": 1,
+          "line_total_cents": 1495
+        },
+        {
+          "id": "c84ab2dd-671c-4c63-a9ee-1f872faab0d8",
+          "menu_item_id": "84000613-5574-4100-bcef-091655af0750",
+          "name": "Vegetable Teriyaki Plate",
+          "quantity": 1,
+          "line_total_cents": 1295
+        },
+        {
+          "id": "29e8bde5-bc35-43ec-a663-1916c78d6a8e",
+          "menu_item_id": "a465f026-4994-4c33-8424-efed991f70d0",
+          "name": "California Roll",
+          "quantity": 2,
+          "line_total_cents": 1590
+        },
+        {
+          "id": "a2b232fc-db3e-475d-9abb-f9473dcdfb82",
+          "menu_item_id": "b395e538-681b-45ec-9c1f-3b31081f7e66",
+          "name": "Gyoza",
+          "quantity": 2,
+          "line_total_cents": 1390
+        },
+        {
+          "id": "0f2d0ece-f262-4b68-a514-2f4f714960b2",
+          "menu_item_id": "e56b4100-d76a-4508-9792-8d238d03ac88",
+          "name": "Edamame",
+          "quantity": 1,
+          "line_total_cents": 595
+        },
+        {
+          "id": "4571ed0a-3f91-4019-ba3b-04bf89e6a7ef",
+          "menu_item_id": "4e5f7271-2873-462e-8bdc-a26f7ef077d4",
+          "name": "Ramune Soda",
+          "quantity": 1,
+          "line_total_cents": 350
+        },
+        {
+          "id": "b30748d8-6903-4193-bbb9-fb5abf9877d2",
+          "menu_item_id": "3cd666b7-c8d0-42c1-9d47-7ff262fc0ce8",
+          "name": "Hot Green Tea",
+          "quantity": 1,
+          "line_total_cents": 200
+        }
+      ],
+      "total_cents": 8610,
+      "savings_cents": 0
+    },
+    "party_size": 4,
+    "budget_cents": 9000,
+    "context_tags": [
+      "Group Friendly",
+      "Family Style"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "5c15d0df-c2d8-5120-b3ac-f3152b44c560",
+    "restaurant_name": "Azuma Japanese Restaurant",
+    "cuisine": "Japanese",
+    "distance_miles": 0.8,
+    "image_seed": 3,
+    "is_verified": true,
+    "combo": {
+      "id": "81af47fd-d08c-4d02-a3e7-fc0bea207cdc",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Solo Quick Bite",
+      "subtitle": "One person, one great order",
+      "line_items": [
+        {
+          "id": "7fd65b75-6c65-4295-bd05-19d0e31d720c",
+          "menu_item_id": "4c657161-3801-4e51-9a6f-2c4ae8c0c2fb",
+          "name": "Teriyaki Beef",
+          "quantity": 1,
+          "line_total_cents": 1795
+        },
+        {
+          "id": "21022339-2307-4f3c-b9a9-245e04d66eab",
+          "menu_item_id": "4e5f7271-2873-462e-8bdc-a26f7ef077d4",
+          "name": "Ramune Soda",
+          "quantity": 1,
+          "line_total_cents": 350
+        },
+        {
+          "id": "c4852327-94f5-4966-8aed-c2a5fca6df96",
+          "menu_item_id": "0082bdad-589d-4b5d-b79a-62f36a6550f8",
+          "name": "Steamed Rice",
+          "quantity": 1,
+          "line_total_cents": 250
+        }
+      ],
+      "total_cents": 2395,
+      "savings_cents": 0
+    },
+    "party_size": 1,
+    "budget_cents": 2500,
+    "context_tags": [
+      "Solo",
+      "Quick Bite"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "acb7f799-3712-534a-8526-43f1cf6fcf81",
+    "restaurant_name": "Azuma Japanese Restaurant",
+    "cuisine": "Japanese",
+    "distance_miles": 0.8,
+    "image_seed": 3,
+    "is_verified": true,
+    "combo": {
+      "id": "5aa83bcd-abb2-41b1-a793-5a5053d53ce8",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Vegetarian Share",
+      "subtitle": "Meat-free picks for the table",
+      "line_items": [
+        {
+          "id": "8f75e7de-a3d0-4ef9-88fe-2951a8134046",
+          "menu_item_id": "84000613-5574-4100-bcef-091655af0750",
+          "name": "Vegetable Teriyaki Plate",
+          "quantity": 3,
+          "line_total_cents": 3885
+        },
+        {
+          "id": "e9eccd8f-74a3-4555-b852-4850079539ec",
+          "menu_item_id": "e56b4100-d76a-4508-9792-8d238d03ac88",
+          "name": "Edamame",
+          "quantity": 2,
+          "line_total_cents": 1190
+        },
+        {
+          "id": "39968a48-82c8-4465-bb6f-c09cdc017366",
+          "menu_item_id": "4e5f7271-2873-462e-8bdc-a26f7ef077d4",
+          "name": "Ramune Soda",
+          "quantity": 3,
+          "line_total_cents": 1050
+        },
+        {
+          "id": "84c0096b-7694-46b4-b894-dc41174fd270",
+          "menu_item_id": "04fbb5c7-6559-4577-8178-96f2edfaabaa",
+          "name": "Miso Soup",
+          "quantity": 2,
+          "line_total_cents": 590
+        },
+        {
+          "id": "1ae08028-c3db-4423-85e9-b69c992d1463",
+          "menu_item_id": "0082bdad-589d-4b5d-b79a-62f36a6550f8",
+          "name": "Steamed Rice",
+          "quantity": 2,
+          "line_total_cents": 500
+        },
+        {
+          "id": "139b0263-26b3-4fbf-a5bf-ad82560f3e0d",
+          "menu_item_id": "3cd666b7-c8d0-42c1-9d47-7ff262fc0ce8",
+          "name": "Hot Green Tea",
+          "quantity": 2,
+          "line_total_cents": 400
+        }
+      ],
+      "total_cents": 7615,
+      "savings_cents": 0
+    },
+    "party_size": 3,
+    "budget_cents": 8000,
+    "context_tags": [
+      "Vegetarian",
+      "Healthy"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "646e9241-a61a-5f41-b8c2-4524399beb3e",
+    "restaurant_name": "Azuma Japanese Restaurant",
+    "cuisine": "Japanese",
+    "distance_miles": 0.8,
+    "image_seed": 3,
+    "is_verified": true,
+    "combo": {
+      "id": "21d6f291-9a59-487e-946b-8f6d79a71de6",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Best Value for 2",
+      "subtitle": "Maximize food per dollar",
+      "line_items": [
+        {
+          "id": "7c9cd102-a092-4c7a-9d77-17c221462144",
+          "menu_item_id": "59c31b3a-a2d3-4680-b954-1d1cbd6103b8",
+          "name": "Katsudon Bowl",
+          "quantity": 1,
+          "line_total_cents": 1395
+        },
+        {
+          "id": "f96d6b12-9603-4850-a2d1-668f93428db4",
+          "menu_item_id": "84000613-5574-4100-bcef-091655af0750",
+          "name": "Vegetable Teriyaki Plate",
+          "quantity": 1,
+          "line_total_cents": 1295
+        },
+        {
+          "id": "e61bb791-5e6a-4fcc-a570-a47be820c45f",
+          "menu_item_id": "4e5f7271-2873-462e-8bdc-a26f7ef077d4",
+          "name": "Ramune Soda",
+          "quantity": 2,
+          "line_total_cents": 700
+        },
+        {
+          "id": "97d419c4-89f1-4606-a6ea-2c947bf0b3ef",
+          "menu_item_id": "0082bdad-589d-4b5d-b79a-62f36a6550f8",
+          "name": "Steamed Rice",
+          "quantity": 1,
+          "line_total_cents": 250
+        },
+        {
+          "id": "8a68ea43-a697-457b-81db-e6dd6c174b3b",
+          "menu_item_id": "3cd666b7-c8d0-42c1-9d47-7ff262fc0ce8",
+          "name": "Hot Green Tea",
+          "quantity": 1,
+          "line_total_cents": 200
+        }
+      ],
+      "total_cents": 3840,
+      "savings_cents": 0
+    },
+    "party_size": 2,
+    "budget_cents": 4000,
+    "context_tags": [
+      "Best Value"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "eeb5b158-61c5-5e86-bd43-331a55aa7320",
+    "restaurant_name": "Eatalian Cafe",
+    "cuisine": "Italian",
+    "distance_miles": 1.6,
+    "image_seed": 0,
+    "is_verified": true,
+    "combo": {
+      "id": "e35c7b50-6a9d-40e5-b78b-8af9c2bf4013",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Date Night for 2",
+      "subtitle": "Shared plates for two",
+      "line_items": [
+        {
+          "id": "c3e7abd4-47fb-4cb3-914c-325730795f9f",
+          "menu_item_id": "ad59309c-8cd2-45e1-b01e-8f0a6626fcfa",
+          "name": "Pepperoni Pizza",
+          "quantity": 1,
+          "line_total_cents": 1800
+        },
+        {
+          "id": "77093665-c7b3-4dff-a476-0e918c403067",
+          "menu_item_id": "2381b5df-883e-40d4-b8f7-ef6a07f5de4a",
+          "name": "Spaghetti Carbonara",
+          "quantity": 1,
+          "line_total_cents": 1700
+        },
+        {
+          "id": "89987b7a-9920-4070-8cfd-28e8a7810278",
+          "menu_item_id": "f1ec2d49-9bf6-4d83-b21b-3f806f5194e8",
+          "name": "Caprese Salad",
+          "quantity": 1,
+          "line_total_cents": 1100
+        },
+        {
+          "id": "5e964278-4f1c-4623-9832-235338c7322b",
+          "menu_item_id": "c7ca1564-6653-4c4f-a4dd-df63b52e68bb",
+          "name": "House Red Wine",
+          "quantity": 1,
+          "line_total_cents": 1000
+        },
+        {
+          "id": "2414f128-746c-4a48-a60a-aacce4d87570",
+          "menu_item_id": "2ba6abe7-f4b6-4c67-8ae0-12b77bf40ac3",
+          "name": "Bruschetta",
+          "quantity": 1,
+          "line_total_cents": 900
+        },
+        {
+          "id": "5c014054-2572-49f5-8812-7732ff708c8b",
+          "menu_item_id": "efcfde98-b5d9-42ed-b62f-d3b36a23c17f",
+          "name": "Garlic Bread",
+          "quantity": 1,
+          "line_total_cents": 700
+        }
+      ],
+      "total_cents": 7200,
+      "savings_cents": 0
+    },
+    "party_size": 2,
+    "budget_cents": 7500,
+    "context_tags": [
+      "Date Night",
+      "Romantic"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "18fe62d0-7e71-59fb-9697-7bfe30edd749",
+    "restaurant_name": "Eatalian Cafe",
+    "cuisine": "Italian",
+    "distance_miles": 1.6,
+    "image_seed": 0,
+    "is_verified": true,
+    "combo": {
+      "id": "c9fa2f1d-6394-48c4-a28b-23873cac0e69",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Family Feast for 4",
+      "subtitle": "Fill everyone up",
+      "line_items": [
+        {
+          "id": "cb11fa13-4276-44ff-a18c-71f5778dbee1",
+          "menu_item_id": "6184eacd-f2c7-47aa-b547-968a467c4069",
+          "name": "Margherita Pizza",
+          "quantity": 1,
+          "line_total_cents": 1600
+        },
+        {
+          "id": "6ba98292-54e6-474c-b2f7-a314a75c4c3d",
+          "menu_item_id": "852a2384-af61-4588-aff9-5f97ebb458f7",
+          "name": "Penne Pomodoro",
+          "quantity": 1,
+          "line_total_cents": 1500
+        },
+        {
+          "id": "7a37f18d-b9c9-4ccf-bc7b-7722c695d473",
+          "menu_item_id": "f1ec2d49-9bf6-4d83-b21b-3f806f5194e8",
+          "name": "Caprese Salad",
+          "quantity": 2,
+          "line_total_cents": 2200
+        },
+        {
+          "id": "b8d5b6e9-2cb2-46ad-bd26-6334e483a25b",
+          "menu_item_id": "c7ca1564-6653-4c4f-a4dd-df63b52e68bb",
+          "name": "House Red Wine",
+          "quantity": 1,
+          "line_total_cents": 1000
+        },
+        {
+          "id": "c3e0211e-1fdc-4fc7-8621-0934be5f68ec",
+          "menu_item_id": "2ba6abe7-f4b6-4c67-8ae0-12b77bf40ac3",
+          "name": "Bruschetta",
+          "quantity": 2,
+          "line_total_cents": 1800
+        },
+        {
+          "id": "22ed31a7-9bb4-4b88-a348-1070ff911d13",
+          "menu_item_id": "9773ebee-3b84-4c10-a716-44909bbe3aeb",
+          "name": "Sparkling Water",
+          "quantity": 1,
+          "line_total_cents": 500
+        }
+      ],
+      "total_cents": 8600,
+      "savings_cents": 0
+    },
+    "party_size": 4,
+    "budget_cents": 9000,
+    "context_tags": [
+      "Group Friendly",
+      "Family Style"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "374f3271-0012-51fe-afb6-dcccd5cfe589",
+    "restaurant_name": "Eatalian Cafe",
+    "cuisine": "Italian",
+    "distance_miles": 1.6,
+    "image_seed": 0,
+    "is_verified": true,
+    "combo": {
+      "id": "db25588e-5d75-4a1c-91fd-cb4c3d418437",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Solo Quick Bite",
+      "subtitle": "One person, one great order",
+      "line_items": [
+        {
+          "id": "63d1c1b5-9c09-4f1c-bf6f-a70467c61bec",
+          "menu_item_id": "dbf1249a-ba75-498d-991a-10ab2e500785",
+          "name": "Quattro Formaggi Pizza",
+          "quantity": 1,
+          "line_total_cents": 1900
+        },
+        {
+          "id": "c21e9c6d-2f14-4747-ad26-079e2d241dab",
+          "menu_item_id": "9773ebee-3b84-4c10-a716-44909bbe3aeb",
+          "name": "Sparkling Water",
+          "quantity": 1,
+          "line_total_cents": 500
+        }
+      ],
+      "total_cents": 2400,
+      "savings_cents": 0
+    },
+    "party_size": 1,
+    "budget_cents": 2500,
+    "context_tags": [
+      "Solo",
+      "Quick Bite"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "37a866f3-bef4-5457-8e27-7ad00a65c6b2",
+    "restaurant_name": "Eatalian Cafe",
+    "cuisine": "Italian",
+    "distance_miles": 1.6,
+    "image_seed": 0,
+    "is_verified": true,
+    "combo": {
+      "id": "c301f21c-19ce-4e1b-a523-31309167e814",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Vegetarian Share",
+      "subtitle": "Meat-free picks for the table",
+      "line_items": [
+        {
+          "id": "e374a114-7df5-4c3b-9c54-80dbea521a14",
+          "menu_item_id": "dbf1249a-ba75-498d-991a-10ab2e500785",
+          "name": "Quattro Formaggi Pizza",
+          "quantity": 1,
+          "line_total_cents": 1900
+        },
+        {
+          "id": "c00ea446-aabe-4a68-a4aa-9f9cd32cd16a",
+          "menu_item_id": "6184eacd-f2c7-47aa-b547-968a467c4069",
+          "name": "Margherita Pizza",
+          "quantity": 1,
+          "line_total_cents": 1600
+        },
+        {
+          "id": "b1f9f0a4-20cd-448e-9a56-14c97a55850d",
+          "menu_item_id": "f1ec2d49-9bf6-4d83-b21b-3f806f5194e8",
+          "name": "Caprese Salad",
+          "quantity": 1,
+          "line_total_cents": 1100
+        },
+        {
+          "id": "afb7db70-5b5c-4289-81d6-0b691d54c69a",
+          "menu_item_id": "2ba6abe7-f4b6-4c67-8ae0-12b77bf40ac3",
+          "name": "Bruschetta",
+          "quantity": 1,
+          "line_total_cents": 900
+        },
+        {
+          "id": "96aae0d5-f8a6-4d4c-bdbd-834e9a148d7c",
+          "menu_item_id": "f5cf9c4b-13b1-4890-a3e2-5aa64fe896d9",
+          "name": "Tiramisu",
+          "quantity": 2,
+          "line_total_cents": 1700
+        },
+        {
+          "id": "06f656e5-699b-41e4-bb71-910d2d3be93e",
+          "menu_item_id": "9773ebee-3b84-4c10-a716-44909bbe3aeb",
+          "name": "Sparkling Water",
+          "quantity": 1,
+          "line_total_cents": 500
+        }
+      ],
+      "total_cents": 7700,
+      "savings_cents": 0
+    },
+    "party_size": 3,
+    "budget_cents": 8000,
+    "context_tags": [
+      "Vegetarian",
+      "Healthy"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "23f3013b-da77-5f7b-b51d-c92410962596",
+    "restaurant_name": "Eatalian Cafe",
+    "cuisine": "Italian",
+    "distance_miles": 1.6,
+    "image_seed": 0,
+    "is_verified": true,
+    "combo": {
+      "id": "5c4a0c5a-653d-4e88-be75-0d07fd6c9214",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Best Value for 2",
+      "subtitle": "Maximize food per dollar",
+      "line_items": [
+        {
+          "id": "2b5721ed-76e0-429a-a603-74b714b0f5c9",
+          "menu_item_id": "6184eacd-f2c7-47aa-b547-968a467c4069",
+          "name": "Margherita Pizza",
+          "quantity": 1,
+          "line_total_cents": 1600
+        },
+        {
+          "id": "c42516d0-1c23-40e9-ac04-3cc74fba727a",
+          "menu_item_id": "2ba6abe7-f4b6-4c67-8ae0-12b77bf40ac3",
+          "name": "Bruschetta",
+          "quantity": 1,
+          "line_total_cents": 900
+        },
+        {
+          "id": "63b74508-6dd4-4052-bf82-97ae6639830b",
+          "menu_item_id": "f5cf9c4b-13b1-4890-a3e2-5aa64fe896d9",
+          "name": "Tiramisu",
+          "quantity": 1,
+          "line_total_cents": 850
+        },
+        {
+          "id": "96a25191-e362-49d7-b7e9-886eb4cbfea0",
+          "menu_item_id": "9773ebee-3b84-4c10-a716-44909bbe3aeb",
+          "name": "Sparkling Water",
+          "quantity": 1,
+          "line_total_cents": 500
+        }
+      ],
+      "total_cents": 3850,
+      "savings_cents": 0
+    },
+    "party_size": 2,
+    "budget_cents": 4000,
+    "context_tags": [
+      "Best Value"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "9f8acb85-3569-549d-8491-ecb2f34cad4f",
+    "restaurant_name": "Shin-Sen-Gumi Chanko",
+    "cuisine": "Japanese",
+    "distance_miles": 1.2,
+    "image_seed": 1,
+    "is_verified": true,
+    "combo": {
+      "id": "ffab6358-48ce-48f4-8888-c7e60b649cbb",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Date Night for 2",
+      "subtitle": "Shared plates for two",
+      "line_items": [
+        {
+          "id": "6ad1145b-4f16-47f6-9eac-c2f6e5768209",
+          "menu_item_id": "5c3947cb-4ce6-457d-a325-1f2228d07539",
+          "name": "Tonkotsu Ramen",
+          "quantity": 1,
+          "line_total_cents": 1380
+        },
+        {
+          "id": "2fe7a710-2d8d-45ca-88cf-c21207572dd5",
+          "menu_item_id": "34646665-2430-461d-ac0b-76f495198e37",
+          "name": "Shio Ramen",
+          "quantity": 1,
+          "line_total_cents": 1280
+        },
+        {
+          "id": "3f93858c-dc08-4854-a0c1-732c486c5f6b",
+          "menu_item_id": "ed059b47-2e54-433a-a69a-b940cced5fd4",
+          "name": "Veggie Shoyu Ramen",
+          "quantity": 1,
+          "line_total_cents": 1180
+        },
+        {
+          "id": "a2eb6090-65e5-4ad9-b07f-2893233ebb0f",
+          "menu_item_id": "7278483d-bb78-4117-8672-16cd096520eb",
+          "name": "Braised Pork Belly",
+          "quantity": 1,
+          "line_total_cents": 980
+        },
+        {
+          "id": "6934c40f-792d-47bd-ad1a-711ae5ceaa1f",
+          "menu_item_id": "740bcf9f-fd4e-4718-afa4-3e705eb6e260",
+          "name": "Draft Beer",
+          "quantity": 1,
+          "line_total_cents": 600
+        },
+        {
+          "id": "10381a4f-2cf0-4918-9261-587a8cff3fac",
+          "menu_item_id": "53cd10fd-dddf-491c-86ef-81e311ee2006",
+          "name": "Edamame",
+          "quantity": 1,
+          "line_total_cents": 480
+        },
+        {
+          "id": "0f20fb69-16db-49f3-b29d-7435ce182a5d",
+          "menu_item_id": "62c4bb68-4b24-4e45-8c70-b573cffa530d",
+          "name": "Ramune Soda",
+          "quantity": 2,
+          "line_total_cents": 700
+        },
+        {
+          "id": "3e54a5ca-2c6d-4377-924a-dbc4dc4a5e94",
+          "menu_item_id": "209f7b73-c0eb-4213-89b1-d3389d30fdda",
+          "name": "Chicken Meatball (Tsukune)",
+          "quantity": 1,
+          "line_total_cents": 300
+        },
+        {
+          "id": "a8b4b40f-1641-4631-8859-f1a0b4bcea99",
+          "menu_item_id": "ab0e7d37-6351-4f5f-80bf-f12fe6823f7f",
+          "name": "Green Tea",
+          "quantity": 1,
+          "line_total_cents": 300
+        }
+      ],
+      "total_cents": 7200,
+      "savings_cents": 0
+    },
+    "party_size": 2,
+    "budget_cents": 7500,
+    "context_tags": [
+      "Date Night",
+      "Romantic"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "82a555f1-3b63-5810-817f-eec086cc7d41",
+    "restaurant_name": "Shin-Sen-Gumi Chanko",
+    "cuisine": "Japanese",
+    "distance_miles": 1.2,
+    "image_seed": 1,
+    "is_verified": true,
+    "combo": {
+      "id": "288bb10d-37ad-4447-ae3c-017b1aa4a0a2",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Family Feast for 4",
+      "subtitle": "Fill everyone up",
+      "line_items": [
+        {
+          "id": "a243c4bb-e800-46d1-9b3c-51d41dd69bc8",
+          "menu_item_id": "ed059b47-2e54-433a-a69a-b940cced5fd4",
+          "name": "Veggie Shoyu Ramen",
+          "quantity": 1,
+          "line_total_cents": 1180
+        },
+        {
+          "id": "ef129d5d-9f26-4686-8ef0-31534ddf3551",
+          "menu_item_id": "7278483d-bb78-4117-8672-16cd096520eb",
+          "name": "Braised Pork Belly",
+          "quantity": 3,
+          "line_total_cents": 2940
+        },
+        {
+          "id": "224428bf-29a0-4666-9513-44530a23cf72",
+          "menu_item_id": "740bcf9f-fd4e-4718-afa4-3e705eb6e260",
+          "name": "Draft Beer",
+          "quantity": 4,
+          "line_total_cents": 2400
+        },
+        {
+          "id": "b3f4ab8b-a57f-4a18-8635-799d135f80b4",
+          "menu_item_id": "53cd10fd-dddf-491c-86ef-81e311ee2006",
+          "name": "Edamame",
+          "quantity": 3,
+          "line_total_cents": 1440
+        },
+        {
+          "id": "04007118-824b-4aed-9cb4-26b91dded6f2",
+          "menu_item_id": "b8063f24-463c-4d87-b29a-0f9d907c1149",
+          "name": "Beef Tongue Skewer",
+          "quantity": 1,
+          "line_total_cents": 380
+        },
+        {
+          "id": "fb6c6d2d-7cd4-4e36-aa98-533f2b81d122",
+          "menu_item_id": "b012da03-8f7d-4e57-863a-34e0cdf54749",
+          "name": "Chicken Thigh Skewer",
+          "quantity": 1,
+          "line_total_cents": 280
+        }
+      ],
+      "total_cents": 8620,
+      "savings_cents": 0
+    },
+    "party_size": 4,
+    "budget_cents": 9000,
+    "context_tags": [
+      "Group Friendly",
+      "Family Style"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "d5f173d0-3241-5783-8f6a-408c6b385c80",
+    "restaurant_name": "Shin-Sen-Gumi Chanko",
+    "cuisine": "Japanese",
+    "distance_miles": 1.2,
+    "image_seed": 1,
+    "is_verified": true,
+    "combo": {
+      "id": "be26fa80-e017-47e2-b5bf-a87ecabdace7",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Solo Quick Bite",
+      "subtitle": "One person, one great order",
+      "line_items": [
+        {
+          "id": "53fe8d0c-6278-4297-8966-f8e96861323e",
+          "menu_item_id": "7278483d-bb78-4117-8672-16cd096520eb",
+          "name": "Braised Pork Belly",
+          "quantity": 1,
+          "line_total_cents": 980
+        },
+        {
+          "id": "4897c4b1-ec2d-4af5-bfb9-9fcb74c1aee7",
+          "menu_item_id": "53cd10fd-dddf-491c-86ef-81e311ee2006",
+          "name": "Edamame",
+          "quantity": 1,
+          "line_total_cents": 480
+        },
+        {
+          "id": "e5b5aa8e-2823-4f56-aa6d-432d1603e1af",
+          "menu_item_id": "b8063f24-463c-4d87-b29a-0f9d907c1149",
+          "name": "Beef Tongue Skewer",
+          "quantity": 1,
+          "line_total_cents": 380
+        },
+        {
+          "id": "87549f1c-8fe5-4c86-ae48-fedd06d29c18",
+          "menu_item_id": "ab0e7d37-6351-4f5f-80bf-f12fe6823f7f",
+          "name": "Green Tea",
+          "quantity": 1,
+          "line_total_cents": 300
+        },
+        {
+          "id": "e631721e-63f3-469d-abdf-b16624dc4a41",
+          "menu_item_id": "9c60d408-6362-4521-a417-51fdbe05cee5",
+          "name": "Shishito Pepper Skewer",
+          "quantity": 1,
+          "line_total_cents": 260
+        }
+      ],
+      "total_cents": 2400,
+      "savings_cents": 0
+    },
+    "party_size": 1,
+    "budget_cents": 2500,
+    "context_tags": [
+      "Solo",
+      "Quick Bite"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "289103c5-53ed-5652-87ac-949e3a7674a1",
+    "restaurant_name": "Shin-Sen-Gumi Chanko",
+    "cuisine": "Japanese",
+    "distance_miles": 1.2,
+    "image_seed": 1,
+    "is_verified": true,
+    "combo": {
+      "id": "bbfd5ea2-2ee9-4730-8d54-5bb36daa518c",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Vegetarian Share",
+      "subtitle": "Meat-free picks for the table",
+      "line_items": [
+        {
+          "id": "780b05ed-0fe3-44f3-ad9d-da828ff3b9ba",
+          "menu_item_id": "ed059b47-2e54-433a-a69a-b940cced5fd4",
+          "name": "Veggie Shoyu Ramen",
+          "quantity": 3,
+          "line_total_cents": 3540
+        },
+        {
+          "id": "d79e018c-02e2-417d-851f-6250966e32d3",
+          "menu_item_id": "53cd10fd-dddf-491c-86ef-81e311ee2006",
+          "name": "Edamame",
+          "quantity": 3,
+          "line_total_cents": 1440
+        },
+        {
+          "id": "470ebeb9-4894-4650-b0b9-fc44c943e275",
+          "menu_item_id": "62c4bb68-4b24-4e45-8c70-b573cffa530d",
+          "name": "Ramune Soda",
+          "quantity": 3,
+          "line_total_cents": 1050
+        },
+        {
+          "id": "9d63737f-1c2c-456a-96b6-0d1ffdb28e9a",
+          "menu_item_id": "ab0e7d37-6351-4f5f-80bf-f12fe6823f7f",
+          "name": "Green Tea",
+          "quantity": 3,
+          "line_total_cents": 900
+        },
+        {
+          "id": "7e17e0d8-52a9-4c52-b8aa-6c90efa17ff9",
+          "menu_item_id": "9c60d408-6362-4521-a417-51fdbe05cee5",
+          "name": "Shishito Pepper Skewer",
+          "quantity": 2,
+          "line_total_cents": 520
+        }
+      ],
+      "total_cents": 7450,
+      "savings_cents": 0
+    },
+    "party_size": 3,
+    "budget_cents": 8000,
+    "context_tags": [
+      "Vegetarian",
+      "Healthy"
+    ],
+    "base_heart_count": 0
+  },
+  {
+    "id": "f76e84cc-19d8-585f-bce8-ebe7ffa3eccb",
+    "restaurant_name": "Shin-Sen-Gumi Chanko",
+    "cuisine": "Japanese",
+    "distance_miles": 1.2,
+    "image_seed": 1,
+    "is_verified": true,
+    "combo": {
+      "id": "82b0760f-4520-40b6-911d-bc64a3b76380",
+      "rank": 1,
+      "is_top_pick": true,
+      "title": "Best Value for 2",
+      "subtitle": "Maximize food per dollar",
+      "line_items": [
+        {
+          "id": "ceeb7d0e-01d8-4eb2-9110-c83b1367ce4e",
+          "menu_item_id": "ed059b47-2e54-433a-a69a-b940cced5fd4",
+          "name": "Veggie Shoyu Ramen",
+          "quantity": 1,
+          "line_total_cents": 1180
+        },
+        {
+          "id": "eaef74a4-e31e-4b31-adbd-a6ba6012326f",
+          "menu_item_id": "7278483d-bb78-4117-8672-16cd096520eb",
+          "name": "Braised Pork Belly",
+          "quantity": 1,
+          "line_total_cents": 980
+        },
+        {
+          "id": "7af38c78-4fe7-4dee-87a4-13f448000824",
+          "menu_item_id": "740bcf9f-fd4e-4718-afa4-3e705eb6e260",
+          "name": "Draft Beer",
+          "quantity": 1,
+          "line_total_cents": 600
+        },
+        {
+          "id": "c09b073a-3dc7-4f93-bd3a-020cde3b432e",
+          "menu_item_id": "53cd10fd-dddf-491c-86ef-81e311ee2006",
+          "name": "Edamame",
+          "quantity": 1,
+          "line_total_cents": 480
+        },
+        {
+          "id": "35635eaa-ee1c-4ff7-b1d4-31b417f01cd0",
+          "menu_item_id": "209f7b73-c0eb-4213-89b1-d3389d30fdda",
+          "name": "Chicken Meatball (Tsukune)",
+          "quantity": 1,
+          "line_total_cents": 300
+        },
+        {
+          "id": "d230b677-f925-4dfe-b6a1-f699fc7f8831",
+          "menu_item_id": "ab0e7d37-6351-4f5f-80bf-f12fe6823f7f",
+          "name": "Green Tea",
+          "quantity": 1,
+          "line_total_cents": 300
+        }
+      ],
+      "total_cents": 3840,
+      "savings_cents": 0
+    },
+    "party_size": 2,
+    "budget_cents": 4000,
+    "context_tags": [
+      "Best Value"
+    ],
+    "base_heart_count": 0
+  }
+]

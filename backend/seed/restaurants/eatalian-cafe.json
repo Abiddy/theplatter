@@ -1,0 +1,41 @@
+{
+  "restaurant_name": "Eatalian Cafe",
+  "cuisine": "Italian",
+  "distance_miles": 1.6,
+  "is_verified": true,
+  "image_seed": 0,
+  "sections": [
+    {
+      "name": "Pizza",
+      "items": [
+        { "name": "Margherita Pizza", "price_cents": 1600, "course": "main", "is_shareable": true, "serves_min": 1, "serves_max": 2, "is_vegetarian": true },
+        { "name": "Pepperoni Pizza", "price_cents": 1800, "course": "main", "is_shareable": true, "serves_min": 1, "serves_max": 2, "contains_pork": true },
+        { "name": "Quattro Formaggi Pizza", "price_cents": 1900, "course": "main", "is_shareable": true, "serves_min": 1, "serves_max": 2, "is_vegetarian": true }
+      ]
+    },
+    {
+      "name": "Pasta",
+      "items": [
+        { "name": "Spaghetti Carbonara", "price_cents": 1700, "course": "main", "contains_pork": true },
+        { "name": "Lasagna Bolognese", "price_cents": 1900, "course": "main" },
+        { "name": "Penne Pomodoro", "price_cents": 1500, "course": "main", "is_vegetarian": true, "is_vegan": true }
+      ]
+    },
+    {
+      "name": "Antipasti",
+      "items": [
+        { "name": "Bruschetta", "price_cents": 900, "course": "appetizer", "is_shareable": true, "serves_min": 1, "serves_max": 2, "is_vegetarian": true },
+        { "name": "Caprese Salad", "price_cents": 1100, "course": "appetizer", "is_vegetarian": true },
+        { "name": "Garlic Bread", "price_cents": 700, "course": "side", "is_shareable": true, "serves_max": 2, "is_vegetarian": true }
+      ]
+    },
+    {
+      "name": "Dessert & Drinks",
+      "items": [
+        { "name": "Tiramisu", "price_cents": 850, "course": "dessert", "is_vegetarian": true },
+        { "name": "House Red Wine", "price_cents": 1000, "course": "drink" },
+        { "name": "Sparkling Water", "price_cents": 500, "course": "drink", "is_vegetarian": true, "is_vegan": true }
+      ]
+    }
+  ]
+}

@@ -8,7 +8,7 @@ final class DiscoverRecommendationStore {
 
     private static let heartedKey = "platter.heartedRecommendations"
 
-    init(recommendations: [DiscoverRecommendation] = MockDataService.discoverRecommendations) {
+    init(recommendations: [DiscoverRecommendation] = RecommendationSeed.load()) {
         self.recommendations = recommendations
         loadHearted()
     }
@@ -49,6 +49,12 @@ final class DiscoverRecommendationStore {
 
     var savedRecommendations: [DiscoverRecommendation] {
         recommendations.filter { heartedIDs.contains($0.id) }
+    }
+
+    func recommendations(forRestaurant name: String) -> [DiscoverRecommendation] {
+        recommendations
+            .filter { $0.restaurantName == name }
+            .sorted { heartCount(for: $0) > heartCount(for: $1) }
     }
 
     private func loadHearted() {

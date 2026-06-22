@@ -1,6 +1,11 @@
+from pathlib import Path
+
 from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
+from app.admin import router as admin_router
+from app.db import init_db
 from app.menu_parse import parse_menu_image
 from app.narrate import narrate_combos
 from app.optimizer import generate_combos
@@ -21,6 +26,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(admin_router)
+
+TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
+
+
+@app.on_event("startup")
+def on_startup() -> None:
+    init_db()
+
+
+@app.get("/recs", response_class=HTMLResponse)
+async def recs_portal() -> HTMLResponse:
+    return HTMLResponse((TEMPLATES_DIR / "recs.html").read_text())
+
 
 @app.get("/health")
 async def health() -> dict[str, str | bool]:
@@ -29,6 +48,7 @@ async def health() -> dict[str, str | bool]:
     return {
         "status": "ok",
         "openai_configured": settings.has_openai_key,
+        "places_configured": settings.has_places_key,
         "mock_parse": settings.use_mock_parse,
         "mock_narrate": settings.use_mock_narrate,
     }

@@ -37,3 +37,8 @@ enum CuisineFilter: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 }
+
+struct RestaurantRoute: Hashable, Identifiable {
+    let name: String
+    var id: String { name }
+}
