@@ -12,9 +12,10 @@ from sqlmodel import Session, select
 from app.db import get_session
 from app.menu_parse import parse_menu_text
 from app.models import RestaurantRecord
+from app.optimizer import generate_combos
 from app.personas import build_cards_for_menu
 from app.places import search_places
-from app.schemas import Menu
+from app.schemas import Constraints, Menu
 
 router = APIRouter()
 
@@ -178,6 +179,33 @@ def get_restaurant(restaurant_id: UUID, session: Session = Depends(get_session))
         "status": record.status,
         "menu": record.menu_json or {},
         "recommendations": record.recommendations_json or [],
+    }
+
+
+@router.post("/admin/restaurants/{restaurant_id}/recommend")
+def test_recommend(
+    restaurant_id: UUID,
+    constraints: Constraints,
+    session: Session = Depends(get_session),
+) -> dict:
+    """Run the deterministic optimizer against a saved restaurant's menu.
+
+    Pure algorithm test harness — no OpenAI/narration so it's free and fast.
+    """
+    record = session.get(RestaurantRecord, restaurant_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Restaurant not found.")
+    if not record.menu_json:
+        raise HTTPException(status_code=400, detail="This restaurant has no saved menu.")
+
+    menu = Menu.model_validate(record.menu_json)
+    combos, summary, tags = generate_combos(menu, constraints)
+    eligible_count = len(menu.all_items)
+    return {
+        "combos": [c.model_dump(mode="json") for c in combos],
+        "summary": summary,
+        "constraint_tags": tags,
+        "menu_item_count": eligible_count,
     }
 
 

@@ -52,6 +52,18 @@
     .combo-line { display: flex; justify-content: space-between; font-size: 13px; padding: 2px 0; }
     .combo-total { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; border-top: 1px solid var(--line); margin-top: 8px; padding-top: 8px; }
     .combo-total .per { color: var(--muted); font-weight: 500; font-size: 12px; }
+    .tabs { display: flex; gap: 8px; margin: 4px 0 14px; }
+    .tab { background: transparent; color: var(--muted); border: 1px solid var(--line); padding: 6px 14px; border-radius: 999px; font-size: 13px; }
+    .tab.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .test-panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px; }
+    .test-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+    .fld { display: flex; flex-direction: column; gap: 6px; }
+    .fld > span { font-size: 12px; color: var(--muted); font-weight: 600; }
+    .fld input, .fld select { padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-size: 14px; }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .toggle-chip { background: var(--bg); color: var(--muted); border: 1px solid var(--line); padding: 7px 13px; border-radius: 999px; font-size: 13px; }
+    .toggle-chip.on { background: var(--orange); color: #fff; border-color: var(--orange); }
+    .tags-line { margin-bottom: 12px; }
     .empty { color: var(--muted); font-size: 14px; padding: 30px 0; text-align: center; }
     .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -76,6 +88,45 @@
 
     <div class="section-title">Saved restaurants</div>
     <div id="saved-list"><div class="empty">Loading…</div></div>
+
+    <div class="section-title">🧪 Test the algorithm</div>
+    <div class="test-panel">
+      <div class="test-grid">
+        <label class="fld">
+          <span>Restaurant</span>
+          <select id="t-restaurant"></select>
+        </label>
+        <label class="fld">
+          <span>Party size</span>
+          <input id="t-party" type="number" min="1" max="20" value="2" />
+        </label>
+        <label class="fld">
+          <span>Total budget ($)</span>
+          <input id="t-budget" type="number" min="10" step="5" value="75" />
+        </label>
+        <label class="fld">
+          <span># Vegetarians</span>
+          <input id="t-veg" type="number" min="0" max="20" value="0" />
+        </label>
+      </div>
+
+      <div class="fld" style="margin-top:14px"><span>Optimize for</span></div>
+      <div id="t-goals" class="chip-row"></div>
+
+      <div class="fld" style="margin-top:14px"><span>Dietary restrictions</span></div>
+      <div id="t-diet" class="chip-row"></div>
+
+      <label class="fld" style="margin-top:14px">
+        <span>Notes (free text)</span>
+        <input id="t-notes" type="text" placeholder="e.g. no spicy, loves seafood" />
+      </label>
+
+      <div class="modal-actions" style="margin-top:16px">
+        <button class="btn-primary" id="t-run" onclick="runAlgorithm()">Run algorithm</button>
+      </div>
+
+      <div id="t-results" class="preview" style="display:none"></div>
+    </div>
   </div>
 
   <!-- Add Menu modal -->
@@ -105,6 +156,10 @@
     <div class="modal">
       <div class="row"><h2 id="combo-title">Combos</h2><button class="btn-ghost" onclick="closeCombos()">Close</button></div>
       <div class="sub" id="combo-sub"></div>
+      <div class="tabs">
+        <button class="tab active" id="tab-combos" onclick="switchTab('combos')">Combos</button>
+        <button class="tab" id="tab-menu" onclick="switchTab('menu')">Full menu</button>
+      </div>
       <div id="combo-body"><div class="empty"><span class="spinner"></span> Loading…</div></div>
     </div>
   </div>
@@ -260,9 +315,13 @@
       finally { btn.innerHTML = 'Save to Discover'; btn.disabled = false; }
     }
 
+    let comboData = null;     // last loaded restaurant detail
+    let comboTab = 'combos';
+
     async function viewCombos(i) {
       const p = window._places[i];
       const dbId = savedDbId(p);
+      comboData = null; comboTab = 'combos'; setActiveTab();
       document.getElementById('combo-title').textContent = p.name;
       document.getElementById('combo-sub').textContent = p.cuisine + ' · ' + p.distance_miles + ' mi';
       document.getElementById('combo-body').innerHTML = '<div class="empty"><span class="spinner"></span> Loading…</div>';
@@ -271,11 +330,34 @@
       try {
         const r = await fetch('/admin/restaurants/' + dbId);
         if (!r.ok) { document.getElementById('combo-body').innerHTML = '<div class="empty">Could not load.</div>'; return; }
-        const data = await r.json();
-        renderCombos(data.recommendations || []);
+        comboData = await r.json();
+        renderComboTab();
       } catch (e) {
         document.getElementById('combo-body').innerHTML = '<div class="empty">Error: ' + e + '</div>';
       }
+    }
+
+    function switchTab(tab) { comboTab = tab; setActiveTab(); renderComboTab(); }
+
+    function setActiveTab() {
+      document.getElementById('tab-combos').classList.toggle('active', comboTab === 'combos');
+      document.getElementById('tab-menu').classList.toggle('active', comboTab === 'menu');
+    }
+
+    function renderComboTab() {
+      if (!comboData) return;
+      if (comboTab === 'menu') renderMenu(comboData.menu || {});
+      else renderCombos(comboData.recommendations || []);
+    }
+
+    function renderMenu(menu) {
+      const sections = menu.sections || [];
+      if (!sections.length) { document.getElementById('combo-body').innerHTML = '<div class="empty">No menu saved.</div>'; return; }
+      document.getElementById('combo-body').innerHTML = sections.map(s => `
+        <div class="menu-section">
+          <h4>${s.name}</h4>
+          ${(s.items || []).map(it => `<div class="menu-item"><span>${it.name}</span><span>${fmtPrice(it.price_cents)}</span></div>`).join('')}
+        </div>`).join('');
     }
 
     function renderCombos(recs) {
@@ -310,6 +392,7 @@
           if (x.place_id) savedIdByPlace[x.place_id] = x.id;
           savedIdByName[(x.name || '').trim().toLowerCase()] = x.id;
         });
+        populateTestDropdown(rows);
         renderResults();
         if (!rows.length) { box.innerHTML = '<div class="empty">No restaurants saved yet.</div>'; return; }
         box.innerHTML = '<div class="grid">' + rows.map(row => `
@@ -336,7 +419,96 @@
       setTimeout(() => t.classList.remove('show'), 2500);
     }
 
+    // ---------- Algorithm test panel ----------
+    const GOALS = [
+      ['best_value', 'Best value'], ['most_food', 'Most food'], ['best_variety', 'Best variety'],
+      ['healthy', 'Healthy'], ['high_protein', 'High protein'], ['family_style', 'Family style'],
+      ['kid_friendly', 'Kid friendly'], ['dessert_included', 'Dessert included'],
+    ];
+    const DIETS = [
+      ['vegetarian', 'Vegetarian'], ['vegan', 'Vegan'], ['gluten_free', 'Gluten-free'],
+      ['no_nuts', 'No nuts'], ['no_fish', 'No fish'], ['no_shellfish', 'No shellfish'],
+      ['no_pork', 'No pork'], ['halal', 'Halal'], ['kosher', 'Kosher'], ['dairy_free', 'Dairy-free'],
+    ];
+    const selectedGoals = new Set(['best_value']);
+    const selectedDiets = new Set();
+
+    function buildChips() {
+      document.getElementById('t-goals').innerHTML = GOALS.map(([k, l]) =>
+        `<button class="toggle-chip ${selectedGoals.has(k) ? 'on' : ''}" data-g="${k}" onclick="toggleGoal('${k}')">${l}</button>`).join('');
+      document.getElementById('t-diet').innerHTML = DIETS.map(([k, l]) =>
+        `<button class="toggle-chip ${selectedDiets.has(k) ? 'on' : ''}" data-d="${k}" onclick="toggleDiet('${k}')">${l}</button>`).join('');
+    }
+
+    function toggleGoal(k) {
+      if (selectedGoals.has(k)) { if (selectedGoals.size > 1) selectedGoals.delete(k); }
+      else selectedGoals.add(k);
+      buildChips();
+    }
+    function toggleDiet(k) {
+      if (selectedDiets.has(k)) selectedDiets.delete(k); else selectedDiets.add(k);
+      buildChips();
+    }
+
+    function populateTestDropdown(rows) {
+      const withMenu = rows.filter(r => r.menu_item_count > 0);
+      const sel = document.getElementById('t-restaurant');
+      const prev = sel.value;
+      sel.innerHTML = withMenu.length
+        ? withMenu.map(r => `<option value="${r.id}">${r.name} (${r.menu_item_count} items)</option>`).join('')
+        : '<option value="">No saved menus yet</option>';
+      if (prev) sel.value = prev;
+    }
+
+    async function runAlgorithm() {
+      const id = document.getElementById('t-restaurant').value;
+      if (!id) { return; }
+      const btn = document.getElementById('t-run');
+      const out = document.getElementById('t-results');
+      btn.innerHTML = '<span class="spinner"></span> Running…'; btn.disabled = true;
+      const body = {
+        party_size: parseInt(document.getElementById('t-party').value) || 1,
+        budget_cents: Math.round((parseFloat(document.getElementById('t-budget').value) || 0) * 100),
+        dietary_rules: [...selectedDiets],
+        vegetarian_count: parseInt(document.getElementById('t-veg').value) || 0,
+        optimize_goals: [...selectedGoals],
+        free_text_notes: document.getElementById('t-notes').value,
+      };
+      try {
+        const r = await fetch('/admin/restaurants/' + id + '/recommend', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+        });
+        if (!r.ok) { out.style.display = 'block'; out.innerHTML = '<div class="warn">' + (await r.json()).detail + '</div>'; return; }
+        renderAlgoResults(await r.json());
+      } catch (e) { out.style.display = 'block'; out.innerHTML = '<div class="warn">Failed: ' + e + '</div>'; }
+      finally { btn.innerHTML = 'Run algorithm'; btn.disabled = false; }
+    }
+
+    function renderAlgoResults(data) {
+      const out = document.getElementById('t-results');
+      out.style.display = 'block';
+      const tags = (data.constraint_tags || []).map(t => `<span class="rec-chip">${t}</span>`).join('');
+      const combos = (data.combos || []).map(c => {
+        const lines = (c.line_items || []).map(li =>
+          `<div class="combo-line"><span>${li.quantity}× ${li.name}</span><span>${fmtPrice(li.line_total_cents)}</span></div>`).join('');
+        const party = parseInt(document.getElementById('t-party').value) || 1;
+        const per = party > 0 ? c.total_cents / party : c.total_cents;
+        return `<div class="combo-card">
+          <div class="ctitle">#${c.rank} ${c.title}${c.is_top_pick ? ' ⭐' : ''}</div>
+          <div class="csub">${c.subtitle || ''}</div>
+          ${lines}
+          <div class="combo-total"><span>Total ${fmtPrice(c.total_cents)}</span><span class="per">${fmtPrice(per)}/person · saves ${fmtPrice(c.savings_cents)}</span></div>
+        </div>`;
+      }).join('') || '<div class="empty">No combos returned — try loosening constraints.</div>';
+      out.innerHTML = `
+        <div class="section-title" style="margin-top:0">Results · ${data.menu_item_count} menu items</div>
+        <div class="tags-line">${tags}</div>
+        ${data.summary ? '<div class="warn" style="background:rgba(255,255,255,.05);color:var(--muted)">' + data.summary + '</div>' : ''}
+        ${combos}`;
+    }
+
     document.getElementById('search-input').addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
+    buildChips();
     checkStatus(); loadSaved();
   </script>
 </body>
