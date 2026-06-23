@@ -19,7 +19,14 @@
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; -webkit-font-smoothing: antialiased; }
     header { padding: 16px 28px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; position: sticky; top: 0; background: rgba(255,255,255,.85); backdrop-filter: saturate(180%) blur(10px); z-index: 10; }
     header h1 { font-size: 18px; font-weight: 800; letter-spacing: -.01em; }
-    header .pill { font-size: 11px; font-weight: 600; color: var(--muted); background: var(--field); border: 1px solid var(--line); border-radius: 999px; padding: 5px 11px; }
+    header .pill { font-size: 11px; font-weight: 600; color: var(--muted); background: var(--field); border: 1px solid var(--line); border-radius: 999px; padding: 5px 11px; margin-left: auto; }
+    .nav { display: flex; gap: 4px; margin-left: 18px; background: var(--field); border: 1px solid var(--line); border-radius: 12px; padding: 4px; }
+    .nav-tab { background: transparent; color: var(--muted); padding: 8px 16px; border-radius: 9px; font-size: 13.5px; font-weight: 600; }
+    .nav-tab:hover { color: var(--text); }
+    .nav-tab.active { background: var(--card); color: var(--orange); box-shadow: var(--shadow-sm); }
+    .view-head { margin-bottom: 18px; }
+    .view-title { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+    .view-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
     .wrap { max-width: 1120px; margin: 0 auto; padding: 28px; }
     .searchbar { display: flex; gap: 10px; margin-bottom: 8px; }
     .searchbar input { flex: 1; padding: 13px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 15px; box-shadow: var(--shadow-sm); transition: border-color .15s, box-shadow .15s; }
@@ -89,23 +96,45 @@
 </head>
 <body>
   <header>
-    <h1>🍽️ Platter Recs Portal</h1>
+    <h1>🍽️ Platter</h1>
+    <nav class="nav">
+      <button class="nav-tab active" data-view="add" onclick="showView('add')">Add Restaurants</button>
+      <button class="nav-tab" data-view="saved" onclick="showView('saved')">Saved Restaurants</button>
+      <button class="nav-tab" data-view="algo" onclick="showView('algo')">Algorithm</button>
+    </nav>
     <span class="pill" id="status-pill">checking…</span>
   </header>
 
   <div class="wrap">
-    <div class="searchbar">
-      <input id="search-input" placeholder="Search a location or restaurant (e.g. Gardena)" />
-      <button class="btn-primary" onclick="runSearch()">Search</button>
-    </div>
+    <!-- Add Restaurants -->
+    <section class="view" id="view-add">
+      <div class="view-head">
+        <h2 class="view-title">Add restaurants</h2>
+        <p class="view-sub">Search by location or name, then add a menu to generate recommendations.</p>
+      </div>
+      <div class="searchbar">
+        <input id="search-input" placeholder="Search a location or restaurant (e.g. Gardena)" />
+        <button class="btn-primary" onclick="runSearch()">Search</button>
+      </div>
+      <div id="search-results"></div>
+    </section>
 
-    <div id="search-results"></div>
+    <!-- Saved Restaurants -->
+    <section class="view" id="view-saved" style="display:none">
+      <div class="view-head">
+        <h2 class="view-title">Saved restaurants</h2>
+        <p class="view-sub">Restaurants with menus and recommendations live in Discover.</p>
+      </div>
+      <div id="saved-list"><div class="empty">Loading…</div></div>
+    </section>
 
-    <div class="section-title">Saved restaurants</div>
-    <div id="saved-list"><div class="empty">Loading…</div></div>
-
-    <div class="section-title">🧪 Test the algorithm</div>
-    <div class="test-panel">
+    <!-- Algorithm -->
+    <section class="view" id="view-algo" style="display:none">
+      <div class="view-head">
+        <h2 class="view-title">Test the algorithm</h2>
+        <p class="view-sub">Run the optimizer against a saved menu with custom preferences.</p>
+      </div>
+      <div class="test-panel">
       <div class="test-grid">
         <label class="fld">
           <span>Restaurant</span>
@@ -142,6 +171,7 @@
 
       <div id="t-results" class="preview" style="display:none"></div>
     </div>
+    </section>
   </div>
 
   <!-- Add Menu modal -->
@@ -520,6 +550,14 @@
         <div class="tags-line">${tags}</div>
         ${data.summary ? '<div class="note">' + data.summary + '</div>' : ''}
         ${combos}`;
+    }
+
+    function showView(v) {
+      ['add', 'saved', 'algo'].forEach(x => {
+        document.getElementById('view-' + x).style.display = x === v ? 'block' : 'none';
+        document.querySelector('.nav-tab[data-view="' + x + '"]').classList.toggle('active', x === v);
+      });
+      if (v === 'saved' || v === 'algo') loadSaved();
     }
 
     document.getElementById('search-input').addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
