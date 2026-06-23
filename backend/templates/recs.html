@@ -236,7 +236,10 @@
         const bits = [];
         bits.push(j.openai_configured ? 'OpenAI ✓' : 'OpenAI ✗');
         bits.push(j.places_configured ? 'Places ✓' : 'Places ✗');
-        document.getElementById('status-pill').textContent = bits.join(' · ');
+        bits.push(j.database === 'postgres' ? 'DB ✓ Postgres' : 'DB ⚠️ SQLite (wipes!)');
+        const pill = document.getElementById('status-pill');
+        pill.textContent = bits.join(' · ');
+        pill.style.color = j.database === 'postgres' ? '' : '#b45309';
       } catch { document.getElementById('status-pill').textContent = 'offline'; }
     }
 

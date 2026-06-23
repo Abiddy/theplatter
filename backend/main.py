@@ -33,6 +33,12 @@ TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
 
 @app.on_event("startup")
 def on_startup() -> None:
+    from app.config import settings
+
+    if settings.db_kind == "sqlite":
+        print("⚠️  Using SQLite (ephemeral). Set DATABASE_URL to a Postgres instance for persistence.")
+    else:
+        print("✅ Using Postgres (persistent).")
     init_db()
 
 
@@ -49,6 +55,7 @@ async def health() -> dict[str, str | bool]:
         "status": "ok",
         "openai_configured": settings.has_openai_key,
         "places_configured": settings.has_places_key,
+        "database": settings.db_kind,
         "mock_parse": settings.use_mock_parse,
         "mock_narrate": settings.use_mock_narrate,
     }

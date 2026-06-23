@@ -36,5 +36,10 @@ class Settings(BaseSettings):
             url = url.replace("postgresql://", "postgresql+psycopg2://", 1)
         return url
 
+    @property
+    def db_kind(self) -> str:
+        """'postgres' (persistent) or 'sqlite' (ephemeral on Railway)."""
+        return "sqlite" if self.resolved_database_url.startswith("sqlite") else "postgres"
+
 
 settings = Settings()
