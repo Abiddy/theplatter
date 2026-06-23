@@ -47,8 +47,8 @@ struct PlatterTabBar: View {
             scanTab
             sideTab(.saved)
         }
-        .padding(.top, 10)
-        .padding(.bottom, 24)
+        .padding(.top, 6)
+        .padding(.bottom, 6)
         .background(PlatterColors.cardWhite)
         .overlay(alignment: .top) {
             Divider()
@@ -60,12 +60,12 @@ struct PlatterTabBar: View {
         return Button {
             selectedTab = tab
         } label: {
-            VStack(spacing: 5) {
+            VStack(spacing: 2) {
                 Image(systemName: tab.icon)
-                    .font(.system(size: 22, weight: isSelected ? .semibold : .regular))
+                    .font(.system(size: 18, weight: isSelected ? .semibold : .regular))
                     .foregroundStyle(isSelected ? PlatterColors.brandOrange : PlatterColors.textSecondary)
                 Text(tab.title)
-                    .font(.system(size: 12, weight: isSelected ? .semibold : .medium))
+                    .font(.system(size: 10, weight: isSelected ? .semibold : .medium))
                     .foregroundStyle(isSelected ? PlatterColors.brandOrange : PlatterColors.textSecondary)
             }
             .frame(maxWidth: .infinity)
@@ -78,24 +78,24 @@ struct PlatterTabBar: View {
         return Button {
             selectedTab = .scan
         } label: {
-            VStack(spacing: 5) {
+            VStack(spacing: 2) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 18)
+                    RoundedRectangle(cornerRadius: 14)
                         .fill(PlatterColors.brandOrange)
-                        .frame(width: 56, height: 56)
+                        .frame(width: 44, height: 44)
                     Image(systemName: "viewfinder")
-                        .font(.system(size: 26, weight: .medium))
+                        .font(.system(size: 21, weight: .medium))
                         .foregroundStyle(.white)
                 }
-                .offset(y: -18)
+                .offset(y: -10)
 
                 Text("Scan Menu")
-                    .font(.system(size: 12, weight: isSelected ? .semibold : .medium))
+                    .font(.system(size: 10, weight: isSelected ? .semibold : .medium))
                     .foregroundStyle(isSelected ? PlatterColors.brandOrange : PlatterColors.textSecondary)
-                    .offset(y: -18)
+                    .offset(y: -10)
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 56, alignment: .bottom)
+            .frame(height: 44, alignment: .bottom)
         }
         .buttonStyle(.plain)
     }

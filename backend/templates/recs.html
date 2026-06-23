@@ -24,7 +24,8 @@
     .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); padding: 8px 14px; }
     .btn-ghost:hover { color: var(--text); }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
-    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+    .card { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+    .saved-badge { position: absolute; top: 12px; right: 12px; background: rgba(52,199,89,.15); color: var(--green); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; display: flex; align-items: center; gap: 4px; }
     .card h3 { font-size: 16px; margin-bottom: 4px; }
     .card .meta { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
     .card .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
@@ -44,6 +45,13 @@
     .menu-section h4 { font-size: 12px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
     .menu-item { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
     .rec-chip { display: inline-block; background: rgba(255,87,34,.12); color: var(--orange); font-size: 12px; padding: 5px 11px; border-radius: 999px; margin: 0 6px 6px 0; }
+    .combo-card { border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+    .combo-card .ctitle { font-size: 15px; font-weight: 700; }
+    .combo-card .csub { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .combo-card .tag { display: inline-block; background: #2a2a2a; color: var(--muted); font-size: 11px; padding: 3px 8px; border-radius: 999px; margin: 0 4px 8px 0; }
+    .combo-line { display: flex; justify-content: space-between; font-size: 13px; padding: 2px 0; }
+    .combo-total { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; border-top: 1px solid var(--line); margin-top: 8px; padding-top: 8px; }
+    .combo-total .per { color: var(--muted); font-weight: 500; font-size: 12px; }
     .empty { color: var(--muted); font-size: 14px; padding: 30px 0; text-align: center; }
     .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -92,11 +100,34 @@
     </div>
   </div>
 
+  <!-- View combos modal -->
+  <div class="modal-bg" id="combo-modal">
+    <div class="modal">
+      <div class="row"><h2 id="combo-title">Combos</h2><button class="btn-ghost" onclick="closeCombos()">Close</button></div>
+      <div class="sub" id="combo-sub"></div>
+      <div id="combo-body"><div class="empty"><span class="spinner"></span> Loading…</div></div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script>
     let current = null;       // restaurant being edited
     let lastPreview = null;   // { menu, recommendations }
+    let savedPlaceIds = new Set();
+    let savedNames = new Set();
+    let savedIdByPlace = {};   // place_id -> db id
+    let savedIdByName = {};    // lowercased name -> db id
+
+    function isSaved(p) {
+      if (p.place_id && savedPlaceIds.has(p.place_id)) return true;
+      return savedNames.has((p.name || '').trim().toLowerCase());
+    }
+
+    function savedDbId(p) {
+      if (p.place_id && savedIdByPlace[p.place_id]) return savedIdByPlace[p.place_id];
+      return savedIdByName[(p.name || '').trim().toLowerCase()];
+    }
 
     async function checkStatus() {
       try {
@@ -121,18 +152,28 @@
         if (!r.ok) { box.innerHTML = '<div class="empty">' + (await r.json()).detail + '</div>'; return; }
         const places = await r.json();
         if (!places.length) { box.innerHTML = '<div class="empty">No results.</div>'; return; }
-        box.innerHTML = '<div class="section-title">Results</div><div class="grid">' +
-          places.map((p, i) => cardHTML(p, i)).join('') + '</div>';
         window._places = places;
+        renderResults();
       } catch (e) { box.innerHTML = '<div class="empty">Search failed: ' + e + '</div>'; }
     }
 
+    function renderResults() {
+      const places = window._places;
+      if (!places || !places.length) return;
+      document.getElementById('search-results').innerHTML =
+        '<div class="section-title">Results</div><div class="grid">' +
+        places.map((p, i) => cardHTML(p, i)).join('') + '</div>';
+    }
+
     function cardHTML(p, i) {
+      const saved = isSaved(p);
       return `<div class="card">
+        ${saved ? '<span class="saved-badge">✓ Saved</span>' : ''}
         <h3>${p.name}</h3>
         <div class="meta">${p.cuisine} · ${p.distance_miles} mi · ${p.price_tier} · ⭐ ${p.rating || '—'}</div>
-        <div class="row">
-          <button class="btn-primary" style="padding:10px 16px" onclick="openModal(${i})">📖 Add menu</button>
+        <div class="row" style="gap:8px;flex-wrap:wrap">
+          <button class="btn-primary" style="padding:10px 16px" onclick="openModal(${i})">${saved ? '✏️ Edit menu' : '📖 Add menu'}</button>
+          ${saved ? `<button class="btn-ghost" onclick="viewCombos(${i})">🍽️ View combos</button>` : ''}
         </div>
       </div>`;
     }
@@ -219,11 +260,57 @@
       finally { btn.innerHTML = 'Save to Discover'; btn.disabled = false; }
     }
 
+    async function viewCombos(i) {
+      const p = window._places[i];
+      const dbId = savedDbId(p);
+      document.getElementById('combo-title').textContent = p.name;
+      document.getElementById('combo-sub').textContent = p.cuisine + ' · ' + p.distance_miles + ' mi';
+      document.getElementById('combo-body').innerHTML = '<div class="empty"><span class="spinner"></span> Loading…</div>';
+      document.getElementById('combo-modal').classList.add('open');
+      if (!dbId) { document.getElementById('combo-body').innerHTML = '<div class="empty">Not saved yet.</div>'; return; }
+      try {
+        const r = await fetch('/admin/restaurants/' + dbId);
+        if (!r.ok) { document.getElementById('combo-body').innerHTML = '<div class="empty">Could not load.</div>'; return; }
+        const data = await r.json();
+        renderCombos(data.recommendations || []);
+      } catch (e) {
+        document.getElementById('combo-body').innerHTML = '<div class="empty">Error: ' + e + '</div>';
+      }
+    }
+
+    function renderCombos(recs) {
+      if (!recs.length) { document.getElementById('combo-body').innerHTML = '<div class="empty">No combos for this restaurant.</div>'; return; }
+      document.getElementById('combo-body').innerHTML = recs.map(rec => {
+        const c = rec.combo;
+        const per = rec.party_size > 0 ? (c.total_cents / rec.party_size) : c.total_cents;
+        const lines = (c.line_items || []).map(li =>
+          `<div class="combo-line"><span>${li.quantity}× ${li.name}</span><span>${fmtPrice(li.line_total_cents)}</span></div>`).join('');
+        const tags = (rec.context_tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+        return `<div class="combo-card">
+          <div class="ctitle">${c.title}</div>
+          <div class="csub">${c.subtitle || ''} · party of ${rec.party_size} · budget ${fmtPrice(rec.budget_cents)}</div>
+          <div>${tags}</div>
+          ${lines}
+          <div class="combo-total"><span>Total ${fmtPrice(c.total_cents)}</span><span class="per">${fmtPrice(per)} / person</span></div>
+        </div>`;
+      }).join('');
+    }
+
+    function closeCombos() { document.getElementById('combo-modal').classList.remove('open'); }
+
     async function loadSaved() {
       const box = document.getElementById('saved-list');
       try {
         const r = await fetch('/admin/restaurants');
         const rows = await r.json();
+        savedPlaceIds = new Set(rows.filter(x => x.place_id).map(x => x.place_id));
+        savedNames = new Set(rows.map(x => (x.name || '').trim().toLowerCase()));
+        savedIdByPlace = {}; savedIdByName = {};
+        rows.forEach(x => {
+          if (x.place_id) savedIdByPlace[x.place_id] = x.id;
+          savedIdByName[(x.name || '').trim().toLowerCase()] = x.id;
+        });
+        renderResults();
         if (!rows.length) { box.innerHTML = '<div class="empty">No restaurants saved yet.</div>'; return; }
         box.innerHTML = '<div class="grid">' + rows.map(row => `
           <div class="card">

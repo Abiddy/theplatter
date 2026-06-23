@@ -30,15 +30,6 @@ struct DiscoverView: View {
         discoverStore.sorted(.trending, filtered: filteredRecommendations).prefix(3).map { $0 }
     }
 
-    private var greeting: String {
-        let hour = Calendar.current.component(.hour, from: Date())
-        switch hour {
-        case 5..<12: return "Good morning"
-        case 12..<17: return "Good afternoon"
-        default: return "Good evening"
-        }
-    }
-
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -48,12 +39,13 @@ struct DiscoverView: View {
             .navigationDestination(item: $selectedRestaurant) { route in
                 RestaurantDetailView(restaurantName: route.name)
             }
+            .refreshable { await discoverStore.refresh() }
+            .task { await discoverStore.refresh() }
         }
     }
 
     private var discoverContent: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            header
+        VStack(alignment: .leading, spacing: 12) {
             searchBar
             sortPills
             cuisinePills
@@ -65,60 +57,31 @@ struct DiscoverView: View {
             recommendationFeed
             aiBanner
         }
-        .padding(.horizontal, 20)
-        .padding(.bottom, 16)
-    }
-
-    private var header: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(greeting)
-                    .font(PlatterFont.body(14))
-                    .foregroundStyle(PlatterColors.textSecondary)
-                Text("Discover")
-                    .font(PlatterFont.title(28))
-                    .foregroundStyle(PlatterColors.textPrimary)
-                Text("Orders people actually get")
-                    .font(PlatterFont.caption(13))
-                    .foregroundStyle(PlatterColors.textSecondary)
-            }
-
-            Spacer()
-
-            Circle()
-                .fill(LinearGradient(
-                    colors: [Color(red: 0.8, green: 0.6, blue: 0.5), Color(red: 0.6, green: 0.4, blue: 0.35)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ))
-                .frame(width: 40, height: 40)
-                .overlay {
-                    Image(systemName: "person.fill")
-                        .font(.system(size: 16))
-                        .foregroundStyle(.white)
-                }
-        }
-        .padding(.top, 8)
+        .padding(.horizontal, 16)
+        .padding(.top, 6)
+        .padding(.bottom, 12)
     }
 
     private var searchBar: some View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
+                .font(.system(size: 14))
                 .foregroundStyle(PlatterColors.textSecondary)
             TextField("Search orders, dishes, or cuisines...", text: $searchText)
-                .font(PlatterFont.body(15))
+                .font(PlatterFont.body(14))
             Spacer(minLength: 0)
             Button {} label: {
                 Image(systemName: "slider.horizontal.3")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(.white)
-                    .frame(width: 32, height: 32)
+                    .frame(width: 28, height: 28)
                     .background(PlatterColors.brandOrange)
                     .clipShape(Circle())
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.leading, 14)
+        .padding(.trailing, 6)
+        .padding(.vertical, 7)
         .background(PlatterColors.cardWhite)
         .overlay {
             Capsule()
@@ -137,14 +100,14 @@ struct DiscoverView: View {
                         HStack(spacing: 4) {
                             if sort == .trending {
                                 Image(systemName: "flame.fill")
-                                    .font(.system(size: 11))
+                                    .font(.system(size: 10))
                             }
                             Text(sort.rawValue)
-                                .font(PlatterFont.caption(13))
+                                .font(PlatterFont.caption(12))
                         }
                         .foregroundStyle(selectedSort == sort ? .white : PlatterColors.textPrimary)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
+                        .padding(.horizontal, 13)
+                        .padding(.vertical, 6)
                         .background(selectedSort == sort ? PlatterColors.brandOrange : PlatterColors.cardWhite)
                         .overlay {
                             Capsule()
@@ -166,10 +129,10 @@ struct DiscoverView: View {
                         selectedCuisine = cuisine
                     } label: {
                         Text(cuisine.rawValue)
-                            .font(PlatterFont.caption(13))
+                            .font(PlatterFont.caption(12))
                             .foregroundStyle(selectedCuisine == cuisine ? .white : PlatterColors.textPrimary)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
+                            .padding(.horizontal, 13)
+                            .padding(.vertical, 6)
                             .background(selectedCuisine == cuisine ? PlatterColors.textPrimary : PlatterColors.cardWhite)
                             .overlay {
                                 Capsule()

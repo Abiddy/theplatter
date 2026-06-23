@@ -13,6 +13,14 @@ final class DiscoverRecommendationStore {
         loadHearted()
     }
 
+    /// Pull the latest cards from the backend portal; keep bundled data on failure.
+    @MainActor
+    func refresh() async {
+        if let remote = await RecommendationSeed.fetchRemote(), !remote.isEmpty {
+            recommendations = remote
+        }
+    }
+
     func isHearted(_ id: UUID) -> Bool {
         heartedIDs.contains(id)
     }

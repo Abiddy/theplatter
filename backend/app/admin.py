@@ -152,6 +152,7 @@ def list_restaurants(session: Session = Depends(get_session)) -> list[dict]:
     return [
         {
             "id": str(r.id),
+            "place_id": r.place_id,
             "name": r.name,
             "cuisine": r.cuisine,
             "status": r.status,
@@ -162,6 +163,22 @@ def list_restaurants(session: Session = Depends(get_session)) -> list[dict]:
         }
         for r in records
     ]
+
+
+@router.get("/admin/restaurants/{restaurant_id}")
+def get_restaurant(restaurant_id: UUID, session: Session = Depends(get_session)) -> dict:
+    record = session.get(RestaurantRecord, restaurant_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Restaurant not found.")
+    return {
+        "id": str(record.id),
+        "name": record.name,
+        "cuisine": record.cuisine,
+        "distance_miles": record.distance_miles,
+        "status": record.status,
+        "menu": record.menu_json or {},
+        "recommendations": record.recommendations_json or [],
+    }
 
 
 @router.delete("/admin/restaurants/{restaurant_id}")

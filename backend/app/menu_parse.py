@@ -187,7 +187,7 @@ def parse_menu_text(
     client = OpenAI(api_key=settings.openai_api_key)
 
     completion = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4o-mini",
         messages=[
             {
                 "role": "system",
